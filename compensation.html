@@ -1,0 +1,762 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>BE Compensation Plan</title>
+    <!-- Tailwind CSS CDN -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;500;600;700;800&display=swap');
+
+        body {
+            font-family: 'Montserrat', sans-serif;
+            background-color: #1a1a2e; /* Dark background */
+            color: #e0e0e0; /* Light text color */
+            overflow-x: hidden; /* Prevent horizontal scroll */
+        }
+
+        /* Define new accent colors using CSS variables for easy management */
+        :root {
+            --color-primary-accent: #81e5b8; 
+            --color-secondary-accent: #ddcde6; 
+        }
+
+        .text-primary-accent { color: var(--color-primary-accent); }
+        .text-secondary-accent { color: var(--color-secondary-accent); }
+        .bg-primary-accent { background-color: var(--color-primary-accent); }
+        .bg-secondary-accent { background-color: var(--color-secondary-accent); }
+        .border-primary-accent { border-color: var(--color-primary-accent); }
+        .border-secondary-accent { border-color: var(--color-secondary-accent); }
+
+
+        .section-title {
+            position: relative;
+            display: inline-block;
+            padding-bottom: 8px;
+            margin-bottom: 24px;
+        }
+
+        .section-title::after {
+            content: '';
+            position: absolute;
+            left: 0;
+            bottom: 0;
+            width: 50%;
+            height: 3px;
+            background-color: var(--color-primary-accent); /* Primary accent underline */
+            border-radius: 9999px;
+        }
+
+        /* Animation for sections */
+        .animate-fade-in {
+            opacity: 0;
+            transform: translateY(20px);
+            transition: opacity 0.6s ease-out, transform 0.6s ease-out;
+        }
+
+        .animate-fade-in.is-visible {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        /* Custom card styling for better visual appeal */
+        .custom-card {
+            background-color: #2a2a4a; /* Slightly lighter dark background for cards */
+            border: 1px solid #3a3a5a;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.3);
+            transition: transform 0.3s ease-in-out;
+        }
+
+        .custom-card:hover {
+            transform: translateY(-5px);
+        }
+
+        /* SVG icon styling */
+        .icon {
+            width: 24px;
+            height: 24px;
+            fill: currentColor;
+        }
+
+        /* Responsive adjustments for tables */
+        @media (max-width: 768px) {
+            .responsive-table-wrapper {
+                overflow-x: auto;
+                -webkit-overflow-scrolling: touch; /* Enable smooth scrolling on iOS */
+            }
+            .responsive-table {
+                min-width: 800px; /* Ensure table doesn't shrink too much for more columns */
+            }
+        }
+
+        /* Specific styling for bundle details */
+        .bundle-detail-card {
+            background-color: #2a2a4a;
+            border-radius: 1rem;
+            padding: 1.5rem;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.3);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            text-align: center;
+            transition: transform 0.3s ease-in-out;
+        }
+        .bundle-detail-card:hover {
+            transform: translateY(-5px);
+        }
+        .bundle-detail-card .price-section {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            margin-bottom: 1rem;
+        }
+        .bundle-detail-card .price-section .main-price {
+            font-size: 2.5rem;
+            font-weight: 800; /* Extra bold */
+            color: var(--color-primary-accent);
+        }
+        .bundle-detail-card .price-section .monthly-fee {
+            font-size: 1.125rem;
+            color: #a0a0a0;
+        }
+        .bundle-detail-card .bv-section {
+            display: flex;
+            justify-content: space-around;
+            width: 100%;
+            margin-bottom: 1rem;
+        }
+        .bundle-detail-card .bv-item {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+        .bundle-detail-card .bv-item .bv-value {
+            font-size: 1.5rem;
+            font-weight: 800; /* Extra bold */
+            color: var(--color-secondary-accent);
+        }
+        .bundle-detail-card .bv-item .bv-label {
+            font-size: 0.875rem;
+            color: #a0a0a0;
+        }
+        .bundle-detail-card .options-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 1rem;
+            width: 100%;
+            margin-top: 1rem;
+        }
+        .bundle-detail-card .option-card {
+            background-color: #3a3a5a;
+            border-radius: 0.75rem;
+            padding: 1rem;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            text-align: center;
+            border: 1px solid #4a4a6a;
+        }
+        .bundle-detail-card .option-card .option-price {
+            font-size: 1.75rem;
+            font-weight: 700; /* Bold */
+            color: var(--color-primary-accent);
+        }
+        .bundle-detail-card .option-card .option-save {
+            font-size: 1.125rem;
+            color: var(--color-secondary-accent);
+            font-weight: 500; /* Medium */
+        }
+        .bundle-detail-card .option-card .option-bv {
+            font-size: 0.875rem;
+            color: #a0a0a0;
+            margin-top: 0.5rem;
+        }
+        .bundle-detail-card .features-list {
+            margin-top: 1.5rem;
+            width: 100%;
+            text-align: left;
+            list-style: none; /* Remove default bullet */
+            padding-left: 0;
+        }
+        .bundle-detail-card .features-list li {
+            position: relative;
+            padding-left: 1.5rem;
+            margin-bottom: 0.5rem;
+            color: #c0c0c0;
+            font-weight: 300; /* Light */
+        }
+        .bundle-detail-card .features-list li::before {
+            content: '✓'; /* Custom bullet */
+            position: absolute;
+            left: 0;
+            color: var(--color-secondary-accent); /* Secondary accent checkmark */
+            font-weight: 700; /* Bold */
+        }
+    </style>
+</head>
+<body class="min-h-screen flex flex-col">
+
+    <!-- Header Section -->
+    <header class="bg-gray-900 text-white py-6 shadow-lg">
+        <div class="container mx-auto px-4 text-center">
+            <h1 class="text-4xl md:text-5xl font-bold text-primary-accent rounded-lg p-2 inline-block">BE Compensation Plan</h1>
+            <p class="mt-2 text-lg text-gray-300 font-light">Unlock Your Earning Potential</p>
+        </div>
+    </header>
+
+    <!-- Main Content -->
+    <main style="max-width: 1120px;" class=" container mx-auto px-4 py-12">
+
+        <!-- Introduction Section -->
+        <section id="introduction" class="mb-16 animate-fade-in">
+            <h2 class="text-3xl md:text-4xl font-extrabold section-title">Welcome to BE!</h2>
+            <p class="text-lg leading-relaxed font-light">
+                This plan is designed to reward your efforts in building a team and generating business volume through our exciting products and services. Let's explore how you can earn with BE.
+            </p>
+        </section>
+
+        <!-- Business Volume Section -->
+        <section id="business-volume" class="mb-16 animate-fade-in">
+            <h2 class="text-3xl md:text-4xl font-extrabold section-title">1. The Foundation: Business Volume (BV)</h2>
+            <p class="text-lg leading-relaxed font-light mb-8">
+                Your earnings in BE are directly tied to <span class="font-bold text-secondary-accent">Business Volume (BV)</span>. This is generated through the sale of our product bundles and recurring monthly subscriptions.
+            </p>
+
+            <div class="grid grid-cols-1 lg:grid-cols-3 gap-8 mb-12">
+                <!-- Standard Bundle Card -->
+                <div class="bundle-detail-card">
+                    <h3 class="text-3xl font-semibold text-secondary-accent mb-4">Standard Bundle</h3>
+                    <p class="text-lg text-gray-300 font-medium mb-2">WOW Standard Access - Featuring 5+ course categories</p>
+                    <p class="text-md text-gray-400 font-light mb-4">Boost your approach. Access proven strategies, customized automation, and targeted AI-powered insights.</p>
+
+                    <div class="price-section">
+                        <span class="main-price">$499</span><span class="monthly-fee"> + $149/Month</span>
+                    </div>
+                    <div class="bv-section">
+                        <div class="bv-item">
+                            <span class="bv-value">250</span>
+                            <span class="bv-label">Entry BV</span>
+                        </div>
+                        <div class="bv-item">
+                            <span class="bv-value">75</span>
+                            <span class="bv-label">Renewal BV</span>
+                        </div>
+                        <div class="bv-item">
+                            <span class="bv-value">40$</span>
+                            <span class="bv-label">Commission</span>
+                        </div>
+                    </div>
+
+                    <div class="options-grid">
+                        <div class="option-card">
+                            <p class="text-lg text-gray-300 font-light">6-Month</p>
+                            <span class="option-price">$999</span>
+                            <span class="option-save text-secondary-accent">Save $245</span>
+                            <p class="option-bv">Entry BV: 250 | Monthly BV(x4): 75 | Total BV: 550</p>
+                        </div>
+                        <div class="option-card">
+                            <p class="text-lg text-gray-300 font-light">12-Month</p>
+                            <span class="option-price">$1,579</span>
+                            <span class="option-save text-secondary-accent">Save $559</span>
+                            <p class="option-bv">Entry BV: 250 | Monthly BV(x9): 75 | Total BV: 925</p>
+                        </div>
+                    </div>
+
+                    <ul class="features-list">
+                        <li>SGM Crypto Basic</li>
+                        <li>SGM Forex Basic</li>
+                        <li>SHIFT</li>
+                        <li>TITAN</li>
+                        <li>RELIC</li>
+                    </ul>
+                </div>
+
+                <!-- Premium Bundle Card -->
+                <div class="bundle-detail-card">
+                    <h3 class="text-3xl font-semibold text-secondary-accent mb-4">Premium Bundle</h3>
+                    <p class="text-lg text-gray-300 font-medium mb-2">WOW Premium Access - Featuring 6+ course categories</p>
+                    <p class="text-md text-gray-400 font-light mb-4">Master advanced techniques. Unlock comprehensive AI systems and automation support, priority insights, and specialized market analysis.</p>
+
+                    <div class="price-section">
+                        <span class="main-price">$999</span><span class="monthly-fee"> + $149/Month</span>
+                    </div>
+                    <div class="bv-section">
+                        <div class="bv-item">
+                            <span class="bv-value">550</span>
+                            <span class="bv-label">Entry BV</span>
+                        </div>
+                        <div class="bv-item">
+                            <span class="bv-value">75</span>
+                            <span class="bv-label">Renewal BV</span>
+                        </div>
+                        <div class="bv-item">
+                            <span class="bv-value">100$</span>
+                            <span class="bv-label">Commission</span>
+                        </div>
+                    </div>
+
+                    <div class="options-grid">
+                        <div class="option-card">
+                            <p class="text-lg text-gray-300 font-light">6-Month</p>
+                            <span class="option-price">$1,499</span>
+                            <span class="option-save text-secondary-accent">Save $245</span>
+                            <p class="option-bv">Entry BV: 550 | Monthly BV(x4): 75 | Total BV: 850</p>
+                        </div>
+                        <div class="option-card">
+                            <p class="text-lg text-gray-300 font-light">12-Month</p>
+                            <span class="option-price">$2,079</span>
+                            <span class="option-save text-secondary-accent">Save $559</span>
+                            <p class="option-bv">Entry BV: 550 | Monthly BV(x9): 75 | Total BV: 1225</p>
+                        </div>
+                    </div>
+
+                    <ul class="features-list">
+                        <li>SGM Crypto Intermediate</li>
+                        <li>SGM Forex Intermediate</li>
+                        <li>SHIFT</li>
+                        <li>TITAN</li>
+                        <li>RELIC</li>
+                    </ul>
+                </div>
+
+                <!-- Signature Bundle Card -->
+                <div class="bundle-detail-card">
+                    <h3 class="text-3xl font-semibold text-secondary-accent mb-4">Signature Bundle</h3>
+                    <p class="text-lg text-gray-300 font-medium mb-2">WOW Signature Access - Featuring 8+ course categories</p>
+                    <p class="text-md text-gray-400 font-light mb-4">The highest level of AI-powered strategy. Unlock exclusive tools, strategic intelligence, and deep market research.</p>
+
+                    <div class="price-section">
+                        <span class="main-price">$1,799</span><span class="monthly-fee"> + $149/Month</span>
+                    </div>
+                    <div class="bv-section">
+                        <div class="bv-item">
+                            <span class="bv-value">1025</span>
+                            <span class="bv-label">Entry BV</span>
+                        </div>
+                        <div class="bv-item">
+                            <span class="bv-value">75</span>
+                            <span class="bv-label">Renewal BV</span>
+                        </div>
+                        <div class="bv-item">
+                            <span class="bv-value">200$</span>
+                            <span class="bv-label">Commission</span>
+                        </div>
+                    </div>
+
+                    <div class="options-grid">
+                        <div class="option-card">
+                            <p class="text-lg text-gray-300 font-light">6-Month</p>
+                            <span class="option-price">$2,299</span>
+                            <span class="option-save text-secondary-accent">Save $245</span>
+                            <p class="option-bv">Entry BV: 1025 | Monthly BV(x4): 75 | Total BV: 1325</p>
+                        </div>
+                        <div class="option-card">
+                            <p class="text-lg text-gray-300 font-light">12-Month</p>
+                            <span class="option-price">$2,879</span>
+                            <span class="option-save text-secondary-accent">Save $559</span>
+                            <p class="option-bv">Entry BV: 1025 | Monthly BV(x9): 75 | Total BV: 1700</p>
+                        </div>
+                    </div>
+
+                    <ul class="features-list">
+                        <li>SGM Crypto Advanced</li>
+                        <li>SGM Forex Advanced</li>
+                        <li>Indices Marketplace Provider</li>
+                        <li>DIGI Basket Academy Advanced</li>
+                        <li>SHIFT</li>
+                        <li>TITAN</li>
+                        <li>RELIC</li>
+                    </ul>
+                </div>
+            </div>
+
+            <h3 class="text-2xl font-semibold text-secondary-accent mb-4">Monthly Subscription Renewals:</h3>
+            <div class="custom-card p-6 rounded-xl shadow-lg flex flex-col md:flex-row items-center justify-center space-y-4 md:space-y-0 md:space-x-8">
+                <div class="flex items-center space-x-3">
+                    <svg class="icon text-primary-accent" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                        <path d="M12 2v20M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"></path>
+                    </svg>
+                    <p class="text-xl text-gray-300 font-medium"> $149 subscription fee every 30 days</p>
+                </div>
+                <div class="flex items-center space-x-3">
+                    <svg class="icon text-primary-accent" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                        <path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path>
+                        <path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path>
+                    </svg>
+                    <p class="text-xl text-gray-300 font-medium">Each renewal generates <span class="font-bold text-primary-accent">75 BV</span></p>
+                </div>
+            </div>
+            <p class="text-sm text-gray-400 mt-4 text-center font-light">
+                *This "renewal BV" is crucial for the "Power of Three" bonus.
+            </p>
+        </section>
+
+        <!-- Momentum Bonus Section -->
+        <section id="momentum-bonus" class="mb-16 animate-fade-in">
+            <h2 class="text-3xl md:text-4xl font-extrabold section-title">5. Momentum Bonus</h2>
+            <p class="text-lg leading-relaxed font-light mb-8">
+                Earn an <span class="font-bold text-secondary-accent">extra $250</span> for every <span class="font-bold text-primary-accent">3,000 BV</span> in personally acquired volume. The BV accumulation must come from the same cycle.
+            </p>
+
+            <div class="responsive-table-wrapper rounded-xl overflow-hidden shadow-lg custom-card">
+                <table class="responsive-table w-full text-left border-collapse">
+                    <thead class="bg-gray-800 text-gray-200">
+                        <tr>
+                            <th class="p-4 border-b border-gray-700 font-medium">Personal Acquired Volume (BV Total)</th>
+                            <th class="p-4 border-b border-gray-700"></th>
+                            <th class="p-4 border-b border-gray-700 font-medium">Extra Bonus (One-Time Bonus)</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr class="hover:bg-gray-700 transition-colors duration-200">
+                            <td class="p-4 border-b border-gray-700 font-semibold text-primary-accent">3,000 BV (B3B)</td>
+                            <td class="p-4 border-b border-gray-700 text-center text-gray-400">&rarr;</td>
+                            <td class="p-4 border-b border-gray-700 text-secondary-accent font-bold">$250</td>
+                        </tr>
+                        <tr class="hover:bg-gray-700 transition-colors duration-200">
+                            <td class="p-4 border-b border-gray-700 font-semibold text-primary-accent">6,000 BV (B6B)</td>
+                            <td class="p-4 border-b border-gray-700 text-center text-gray-400">&rarr;</td>
+                            <td class="p-4 border-b border-gray-700 text-secondary-accent font-bold">$500</td>
+                        </tr>
+                        <tr class="hover:bg-gray-700 transition-colors duration-200">
+                            <td class="p-4 border-b border-gray-700 font-semibold text-primary-accent">9,000 BV (B9B)</td>
+                            <td class="p-4 border-b border-gray-700 text-center text-gray-400">&rarr;</td>
+                            <td class="p-4 border-b border-gray-700 text-secondary-accent font-bold">$750</td>
+                        </tr>
+                        <tr class="hover:bg-gray-700 transition-colors duration-200">
+                            <td class="p-4 border-b border-gray-700 font-semibold text-primary-accent">12,000 BV (B12B)</td>
+                            <td class="p-4 border-b border-gray-700 text-center text-gray-400">&rarr;</td>
+                            <td class="p-4 border-b border-gray-700 text-secondary-accent font-bold">$1,000</td>
+                        </tr>
+                        <tr class="hover:bg-gray-700 transition-colors duration-200">
+                            <td class="p-4 border-b border-gray-700 font-semibold text-primary-accent">...</td>
+                            <td class="p-4 border-b border-gray-700 text-center text-gray-400">&rarr;</td>
+                            <td class="p-4 border-b border-gray-700 text-secondary-accent font-bold">And so on!</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </section>
+
+
+        <!-- Binary Commission Section -->
+        <section id="binary-commission" class="mb-16 animate-fade-in">
+            <h2 class="text-3xl md:text-4xl font-extrabold section-title">2. Binary Commission: Your Rank Income</h2>
+            <p class="text-lg leading-relaxed font-light mb-8">
+                The core of the BE compensation plan operates on a <span class="font-bold text-secondary-accent">Binary Structure</span>, meaning you build two teams: a <span class="font-bold text-primary-accent">Left Team</span> and a <span class="font-bold text-primary-accent">Right Team</span>.
+            </p>
+
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-8 mb-8">
+                <div class="custom-card p-6 rounded-xl shadow-lg">
+                    <h3 class="text-2xl font-semibold text-secondary-accent mb-3">How it Works:</h3>
+                    <ul class="list-disc list-inside text-lg space-y-2 font-light">
+                        <li><span class="font-bold text-primary-accent">Paid Weekly:</span> Commissions are paid out weekly.</li>
+                        <li><span class="font-bold text-primary-accent">Four-Week Cycles:</span> Commissions are calculated in cycles that run for four weeks, Saturday to Saturday.</li>
+                        <li><span class="font-bold text-primary-accent">Build Only 2 Teams:</span> Focus on your Left & Right teams.</li>
+                        <li><span class="font-bold text-primary-accent">Accumulating BV:</span> You accumulate BV on both your left and right sides from personal sales, team sales, and even upline volume.</li>
+                    </ul>
+                </div>
+                <div class="custom-card p-6 rounded-xl shadow-lg flex flex-col items-center justify-center">
+                    <svg class="icon text-primary-accent w-20 h-20 mb-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+                        <path d="M17 18a2 2 0 0 0-2-2H9a2 2 0 0 0-2 2"></path>
+                        <rect x="3" y="4" width="18" height="18" rx="2" ry="2"></rect>
+                        <line x1="16" y1="2" x2="16" y2="6"></line>
+                        <line x1="8" y1="2" x2="8" y2="6"></line>
+                        <line x1="3" y1="10" x2="21" y2="10"></line>
+                        <circle cx="12" cy="16" r="3"></circle>
+                    </svg>
+                    <p class="text-xl text-center font-bold text-secondary-accent">Your growth, your rewards!</p>
+                </div>
+            </div>
+
+            <h3 class="text-2xl font-semibold text-secondary-accent mb-4">Rank Advancement & Income:</h3>
+            <p class="text-lg leading-relaxed font-light mb-6">
+                By hitting specific BV targets on both sides within a cycle, you unlock different ranks and earn corresponding commissions.
+            </p>
+
+            <div class="responsive-table-wrapper rounded-xl overflow-hidden shadow-lg custom-card">
+                <table class="responsive-table w-full text-left border-collapse">
+                    <thead class="bg-gray-800 text-gray-200">
+                        <tr>
+                            <th class="p-4 border-b border-gray-700 font-medium">Rank</th>
+                            <th class="p-4 border-b border-gray-700 font-medium">Team BV (Left / Right)</th>
+                            <th class="p-4 border-b border-gray-700 font-medium">BV from Own Enrollment Lines</th>
+                            <th class="p-4 border-b border-gray-700 font-medium">Rank Residual</th>
+                            <th class="p-4 border-b border-gray-700 font-medium">Direct Customers</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr class="hover:bg-gray-700 transition-colors duration-200">
+                            <td class="p-4 border-b border-gray-700 font-semibold text-primary-accent">Executive</td>
+                            <td class="p-4 border-b border-gray-700 font-light">550 / 550</td>
+                            <td class="p-4 border-b border-gray-700 font-light">N/A</td>
+                            <td class="p-4 border-b border-gray-700 text-secondary-accent font-bold">$100</td>
+                            <td class="p-4 border-b border-gray-700 font-light">1</td>
+                        </tr>
+                        <tr class="hover:bg-gray-700 transition-colors duration-200">
+                            <td class="p-4 border-b border-gray-700 font-semibold text-primary-accent">Consultant</td>
+                            <td class="p-4 border-b border-gray-700 font-light">1,200 / 1,200</td>
+                            <td class="p-4 border-b border-gray-700 font-light">N/A</td>
+                            <td class="p-4 border-b border-gray-700 text-secondary-accent font-bold">$500</td>
+                            <td class="p-4 border-b border-gray-700 font-light">2</td>
+                        </tr>
+                        <tr class="hover:bg-gray-700 transition-colors duration-200">
+                            <td class="p-4 border-b border-gray-700 font-semibold text-primary-accent">Sapphire</td>
+                            <td class="p-4 border-b border-gray-700 font-light">4,000 / 4,000</td>
+                            <td class="p-4 border-b border-gray-700 font-light">N/A</td>
+                            <td class="p-4 border-b border-gray-700 text-secondary-accent font-bold">$1,500</td>
+                            <td class="p-4 border-b border-gray-700 font-light">3</td>
+                        </tr>
+                        <tr class="hover:bg-gray-700 transition-colors duration-200">
+                            <td class="p-4 border-b border-gray-700 font-semibold text-primary-accent">Ruby</td>
+                            <td class="p-4 border-b border-gray-700 font-light">14,000 / 14,000</td>
+                            <td class="p-4 border-b border-gray-700 font-light">N/A</td>
+                            <td class="p-4 border-b border-gray-700 text-secondary-accent font-bold">$4,000</td>
+                            <td class="p-4 border-b border-gray-700 font-light">3</td>
+                        </tr>
+                        <tr class="hover:bg-gray-700 transition-colors duration-200">
+                            <td class="p-4 border-b border-gray-700 font-semibold text-primary-accent">Emerald</td>
+                            <td class="p-4 border-b border-gray-700 font-light">29,500 / 29,500</td>
+                            <td class="p-4 border-b border-gray-700 font-light">N/A</td>
+                            <td class="p-4 border-b border-gray-700 text-secondary-accent font-bold">$8,500</td>
+                            <td class="p-4 border-b border-gray-700 font-light">3</td>
+                        </tr>
+                        <tr class="hover:bg-gray-700 transition-colors duration-200">
+                            <td class="p-4 border-b border-gray-700 font-semibold text-primary-accent">Diamond</td>
+                            <td class="p-4 border-b border-gray-700 font-light">60,000 / 60,000</td>
+                            <td class="p-4 border-b border-gray-700 font-light">N/A</td>
+                            <td class="p-4 border-b border-gray-700 text-secondary-accent font-bold">$15,000</td>
+                            <td class="p-4 border-b border-gray-700 font-light">3</td>
+                        </tr>
+                        <tr class="hover:bg-gray-700 transition-colors duration-200">
+                            <td class="p-4 border-b border-gray-700 font-semibold text-primary-accent">Executive Diamond</td>
+                            <td class="p-4 border-b border-gray-700 font-light">90,000 / 90,000</td>
+                            <td class="p-4 border-b border-gray-700 font-light">108,000</td>
+                            <td class="p-4 border-b border-gray-700 text-secondary-accent font-bold">$30,000</td>
+                            <td class="p-4 border-b border-gray-700 font-light">4</td>
+                        </tr>
+                        <tr class="hover:bg-gray-700 transition-colors duration-200">
+                            <td class="p-4 border-b border-gray-700 font-semibold text-primary-accent">Presidential Diamond</td>
+                            <td class="p-4 border-b border-gray-700 font-light">180,000 / 180,000</td>
+                            <td class="p-4 border-b border-gray-700 font-light">216,000</td>
+                            <td class="p-4 border-b border-gray-700 text-secondary-accent font-bold">$60,000</td>
+                            <td class="p-4 border-b border-gray-700 font-light">5</td>
+                        </tr>
+                        <tr class="hover:bg-gray-700 transition-colors duration-200">
+                            <td class="p-4 border-b border-gray-700 font-semibold text-primary-accent">Royal Diamond</td>
+                            <td class="p-4 border-b border-gray-700 font-light">370,000 / 370,000</td>
+                            <td class="p-4 border-b border-gray-700 font-light">444,000</td>
+                            <td class="p-4 border-b border-gray-700 text-secondary-accent font-bold">$120,000</td>
+                            <td class="p-4 border-b border-gray-700 font-light">5</td>
+                        </tr>
+                        <tr class="hover:bg-gray-700 transition-colors duration-200">
+                            <td class="p-4 border-b border-gray-700 font-semibold text-primary-accent">Ambassador</td>
+                            <td class="p-4 border-b border-gray-700 font-light">1,110,000 / 1,110,000</td>
+                            <td class="p-4 border-b border-gray-700 font-light">1,332,000</td>
+                            <td class="p-4 border-b border-gray-700 text-secondary-accent font-bold">$280,000</td>
+                            <td class="p-4 border-b border-gray-700 font-light">5</td>
+                        </tr>
+                        <tr class="hover:bg-gray-700 transition-colors duration-200">
+                            <td class="p-4 border-b border-gray-700 font-semibold text-primary-accent">Crown Ambassador</td>
+                            <td class="p-4 border-b border-gray-700 font-light">3,300,000 / 3,300,000</td>
+                            <td class="p-4 border-b border-gray-700 font-light">3,960,000</td>
+                            <td class="p-4 border-b border-gray-700 text-secondary-accent font-bold">$600,000</td>
+                            <td class="p-4 border-b border-gray-700 font-light">5</td>
+                        </tr>
+                        <tr class="hover:bg-gray-700 transition-colors duration-200">
+                            <td class="p-4 border-b border-gray-700 font-semibold text-primary-accent">Icon</td>
+                            <td class="p-4 border-b border-gray-700 font-light">9,999,000 / 9,999,000</td>
+                            <td class="p-4 border-b border-gray-700 font-light">11,998,000</td>
+                            <td class="p-4 border-b border-gray-700 text-secondary-accent font-bold">$1,000,000</td>
+                            <td class="p-4 border-b border-gray-700 font-light">5</td>
+                        </tr>
+                        <tr class="hover:bg-gray-700 transition-colors duration-200">
+                            <td class="p-4 border-b border-gray-700 font-semibold text-primary-accent">Legend</td>
+                            <td class="p-4 border-b border-gray-700 font-light">19,999,999 / 19,999,999</td>
+                            <td class="p-4 border-b border-gray-700 font-light">23,999,999</td>
+                            <td class="p-4 border-b border-gray-700 text-secondary-accent font-bold">$2,000,000</td>
+                            <td class="p-4 border-b border-gray-700 font-light">5</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+
+            <div class="custom-card p-6 rounded-xl shadow-lg mt-8">
+                <h3 class="text-2xl font-semibold text-secondary-accent mb-3">Weekly Payouts Explained:</h3>
+                <p class="text-lg leading-relaxed font-light">
+                    While ranks are based on four-week cycles, you get paid weekly! You receive <span class="font-bold text-primary-accent">25% of your achieved rank's commission each week</span> of the cycle. If you reach a higher rank mid-cycle, the system calculates previous payouts and pays the remaining balance of the higher rank's commission in the final week.
+                </p>
+                <p class="text-lg leading-relaxed font-light mt-4">
+                    <span class="font-bold text-primary-accent">Example: Sapphire Rank ($1,500 for 4,000 BV L/R)</span>
+                    <ul class="list-disc list-inside ml-4 mt-2">
+                        <li><span class="font-semibold">Week 1:</span> Reach 1,200 BV L/R (Consultant level) &rarr; Earn $125 (25% of $500 Consultant commission).</li>
+                        <li><span class="font-semibold">Week 2:</span> Continue growing, still at Consultant level &rarr; Earn another $125.</li>
+                        <li><span class="font-semibold">Week 3:</span> Still at Consultant level &rarr; Earn another $125.</li>
+                        <li><span class="font-semibold">Week 4:</span> Reach 4,000 BV L/R (Sapphire level). Total Sapphire commission is $1,500. You've already received $375. The system pays out the remaining <span class="font-bold text-secondary-accent">$1,125</span> in this final week.</li>
+                    </ul>
+                </p>
+            </div>
+        </section>
+
+        <!-- Generation Matching Bonus Section -->
+        <section id="matching-bonus" class="mb-16 animate-fade-in">
+            <h2 class="text-3xl md:text-4xl font-extrabold section-title">3. Generation Matching Bonus</h2>
+            <p class="text-lg leading-relaxed font-light mb-8">
+                This bonus allows you to earn a percentage of the rank commissions earned by leaders in your downline, extending beyond your direct enrollments.
+            </p>
+
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
+                <div class="custom-card p-6 rounded-xl shadow-lg">
+                    <h3 class="text-2xl font-semibold text-secondary-accent mb-3">How it Unlocks:</h3>
+                    <p class="text-lg leading-relaxed font-light">
+                        This bonus becomes available once you achieve the <span class="font-bold text-primary-accent">Emerald</span> rank (29,500 BV L/R, earning $8,500 rank commission).
+                    </p>
+                    <p class="text-lg leading-relaxed font-light mt-4">
+                        The key here is to <span class="font-bold text-secondary-accent">help your team members achieve higher ranks</span>, as their success directly contributes to your matching bonus!
+                    </p>
+                </div>
+                <div class="custom-card p-6 rounded-xl shadow-lg">
+                    <h3 class="text-2xl font-semibold text-secondary-accent mb-3">Matching Bonus Tiers:</h3>
+                    <ul class="list-disc list-inside text-lg space-y-2 font-light">
+                        <li><span class="font-bold text-primary-accent">Emerald & Above:</span> Earn <span class="font-bold text-secondary-accent">5%</span> on the rank commission of the <span class="font-semibold">first Emeralds</span> in all your enrollment lines.</li>
+                        <li><span class="font-bold text-primary-accent">Diamond & Above:</span> Earn <span class="font-bold text-secondary-accent">5%</span> on the rank commission of the <span class="font-semibold">first Diamonds</span> (as well as Emeralds) in your enrollment lines.</li>
+                        <li><span class="font-bold text-primary-accent">Executive Diamond & Above:</span> Earn <span class="font-bold text-secondary-accent">3%</span> on the rank commission of the <span class="font-semibold">first Executive Diamonds</span> in your enrollment lines.</li>
+                        <li><span class="font-bold text-primary-accent">Presidential Diamond & Above:</span> Earn <span class="font-bold text-secondary-accent">3%</span> on the rank commission of the <span class="font-semibold">first Presidential Diamonds</span> in your enrollment lines.</li>
+                        <li><span class="font-bold text-primary-accent">Royal Diamond & Above:</span> Earn <span class="font-bold text-secondary-accent">2%</span> on the rank commission of the <span class="font-semibold">first Royal Diamonds</span> in your enrollment lines.</li>
+                    </ul>
+                </div>
+            </div>
+        </section>
+
+        <!-- Power of Three Section -->
+        <section id="power-of-three" class="mb-16 animate-fade-in">
+            <h2 class="text-3xl md:text-4xl font-extrabold section-title">4. Power of Three: Monthly Renewal Fee Commission</h2>
+            <p class="text-lg leading-relaxed font-light mb-8">
+                This unique commission focuses on building a <span class="font-bold text-secondary-accent">guaranteed passive income stream</span> from recurring monthly subscription fees.
+            </p>
+
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
+                <!-- Personal Pod -->
+                <div class="custom-card p-6 rounded-xl shadow-lg text-center flex flex-col items-center">
+                    <svg class="icon text-primary-accent w-16 h-16 mb-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+                        <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path>
+                        <circle cx="12" cy="7" r="4"></circle>
+                    </svg>
+                    <h3 class="text-xl font-semibold text-secondary-accent mb-2">Personal Pod Completion</h3>
+                    <p class="text-lg text-gray-300 font-light">Accumulate <span class="font-bold text-primary-accent">500 BV</span> solely from monthly renewal fees.</p>
+                    <p class="text-3xl font-bold text-secondary-accent mt-4">Reward: $75 / month</p>
+                    <p class="text-sm text-gray-400 font-light mt-2">Passive income, separate from other commissions.</p>
+                </div>
+
+                <!-- Tier 1 -->
+                <div class="custom-card p-6 rounded-xl shadow-lg text-center flex flex-col items-center">
+                    <svg class="icon text-primary-accent w-16 h-16 mb-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+                        <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"></path>
+                        <circle cx="9" cy="7" r="4"></circle>
+                        <path d="M23 21v-2a4 4 0 0 0-3-3.87"></path>
+                        <path d="M16 3.13a4 4 0 0 1 0 7.75"></path>
+                    </svg>
+                    <h3 class="text-xl font-semibold text-secondary-accent mb-2">Helping Others (Tier 1)</h3>
+                    <p class="text-lg text-gray-300 font-light">Help <span class="font-bold text-primary-accent">3 people</span> in your team complete their own 500 BV renewal pod.</p>
+                    <p class="text-3xl font-bold text-secondary-accent mt-4">Reward: $300 / month</p>
+                    <p class="text-sm text-gray-400 font-light mt-2">Fully automatic passive income.</p>
+                </div>
+
+                <!-- Tier 2 -->
+                <div class="custom-card p-6 rounded-xl shadow-lg text-center flex flex-col items-center">
+                    <svg class="icon text-primary-accent w-16 h-16 mb-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+                        <path d="M16 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"></path>
+                        <circle cx="8.5" cy="7" r="4"></circle>
+                        <path d="M20 8v.01"></path>
+                        <path d="M22 12v.01"></path>
+                        <path d="M23 16v.01"></path>
+                        <path d="M21 20v.01"></path>
+                        <path d="M18 22v.01"></path>
+                        <path d="M14 23v.01"></path>
+                        <path d="M10 23v.01"></path>
+                        <path d="M6 22v.01"></path>
+                        <path d="M4 20v.01"></path>
+                        <path d="M2 16v.01"></path>
+                        <path d="M1 12v.01"></path>
+                        <path d="M2 8v.01"></path>
+                        <path d="M4 4v.01"></path>
+                        <path d="M6 2v.01"></path>
+                        <path d="M10 1v.01"></path>
+                        <path d="M14 1v.01"></path>
+                        <path d="M18 2v.01"></path>
+                        <path d="M20 4v.01"></path>
+                    </svg>
+                    <h3 class="text-xl font-semibold text-secondary-accent mb-2">Helping Your Team Help Others (Tier 2)</h3>
+                    <p class="text-lg text-gray-300 font-light">Help those 3 people, in turn, help <span class="font-bold text-primary-accent">3 *more* people</span> complete their pods.</p>
+                    <p class="text-3xl font-bold text-secondary-accent mt-4">Reward: $500 / month</p>
+                    <p class="text-sm text-gray-400 font-light mt-2">Absolutely wild & customer-driven!</p>
+                </div>
+            </div>
+            <p class="text-lg leading-relaxed font-light mt-8 text-center">
+                This bonus highlights BE's focus on customer satisfaction and product usage, as consistent renewals generate ongoing BV and passive income for you and your team.
+            </p>
+        </section>
+
+        <!-- Additional Benefits Section -->
+        <section id="additional-benefits" class="mb-16 animate-fade-in">
+            <h2 class="text-3xl md:text-4xl font-extrabold section-title">Additional Benefits & Your Journey</h2>
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
+                <div class="custom-card p-6 rounded-xl shadow-lg">
+                    <h3 class="text-2xl font-semibold text-secondary-accent mb-3">Beyond Commissions:</h3>
+                    <ul class="list-disc list-inside text-lg space-y-2 font-light">
+                        <li><span class="font-bold text-primary-accent">Direct Sales Commission:</span> Earn commissions on your initial direct sales of bundles.</li>
+                        <li><span class="font-bold text-primary-accent">Exclusive Retreats & Conventions:</span> Achieve Sapphire rank and above to qualify for special retreats and recognition at large conventions.</li>
+                        <li><span class="font-bold text-primary-accent">Leadership Recognition:</span> Diamonds and higher ranks get to share their inspiring stories on stage!</li>
+                    </ul>
+                </div>
+                <div class="custom-card p-6 rounded-xl shadow-lg">
+                    <h3 class="text-2xl font-semibold text-secondary-accent mb-3">Key Principles:</h3>
+                    <ul class="list-disc list-inside text-lg space-y-2 font-light">
+                        <li><span class="font-bold text-primary-accent">Teamwork is Key:</span> Helping your left and right teams grow is fundamental to your success and rank advancements.</li>
+                        <li><span class="font-bold text-primary-accent">Residual Income:</span> The monthly renewal fees provide a powerful path to consistent, long-term residual income.</li>
+                    </ul>
+                </div>
+            </div>
+            <p class="text-lg leading-relaxed font-light mt-8 text-center">
+                We're excited for your journey with BE! This compensation plan is designed to reward your dedication to building a strong business and helping others succeed.
+            </p>
+        </section>
+
+    </main>
+
+    <!-- Footer Section -->
+    <footer class="bg-gray-900 text-gray-400 py-6 text-center shadow-inner">
+        <div class="container mx-auto px-4">
+            <p class="font-light">&copy; 2025 BE Compensation Plan. All rights reserved.</p>
+        </div>
+    </footer>
+
+    <script>
+        // Intersection Observer for fade-in animations
+        const sections = document.querySelectorAll('.animate-fade-in');
+
+        const observerOptions = {
+            root: null, /* viewport */
+            rootMargin: '0px',
+            threshold: 0.1 /* 10% of element visible */
+        };
+
+        const observer = new IntersectionObserver((entries, observer) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    entry.target.classList.add('is-visible');
+                    observer.unobserve(entry.target); // Stop observing once visible
+                }
+            });
+        }, observerOptions);
+
+        sections.forEach(section => {
+            observer.observe(section);
+        });
+    </script>
+</body>
+</html>
+
+
