@@ -7,7 +7,13 @@
         <!-- Tailwind CSS CDN -->
         <script src="https://cdn.tailwindcss.com"></script>
         <style>
-            @import url("https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;500;600;700;800&display=swap");
+            @import url("https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;500;600;700;800;900&display=swap");
+
+            /* --- Smooth Scrolling & Scroll Padding --- */
+            html {
+                scroll-behavior: smooth;
+                scroll-padding-top: 5rem; /* Adjust for fixed header height */
+            }
 
             body {
                 font-family: "Montserrat", sans-serif;
@@ -15,11 +21,17 @@
                 color: #e0e0e0; /* Light text color */
                 overflow-x: hidden; /* Prevent horizontal scroll */
             }
+            /* --- Prevent body scroll when mobile menu is open --- */
+            body.mobile-nav-open {
+                overflow: hidden;
+            }
 
-            /* Define new accent colors using CSS variables for easy management */
+            /* CSS Variables */
             :root {
                 --color-primary-accent: #81e5b8; /* Light Green/Aqua */
                 --color-secondary-accent: #ddcde6; /* Light Purple/Lavender */
+                --color-dark-main: #1a1a2e;
+                --color-dark-card: #2a2a4a;
             }
 
             .text-primary-accent {
@@ -31,14 +43,8 @@
             .bg-primary-accent {
                 background-color: var(--color-primary-accent);
             }
-            .bg-secondary-accent {
-                background-color: var(--color-secondary-accent);
-            }
             .border-primary-accent {
                 border-color: var(--color-primary-accent);
-            }
-            .border-secondary-accent {
-                border-color: var(--color-secondary-accent);
             }
 
             .section-title {
@@ -53,57 +59,115 @@
                 position: absolute;
                 left: 0;
                 bottom: 0;
-                width: 50%;
-                height: 3px;
-                background-color: var(
-                    --color-primary-accent
-                ); /* Primary accent underline */
+                width: 60%;
+                height: 4px;
+                background: var(--color-primary-accent);
                 border-radius: 9999px;
             }
 
-            /* Animation for sections */
+            /* Animation for sections on scroll */
             .animate-fade-in {
                 opacity: 0;
                 transform: translateY(20px);
                 transition: opacity 0.6s ease-out, transform 0.6s ease-out;
             }
-
             .animate-fade-in.is-visible {
                 opacity: 1;
                 transform: translateY(0);
             }
 
-            /* Custom card styling for better visual appeal */
+            /* --- HERO SECTION STYLES --- */
+            @keyframes slideInLeft {
+                from {
+                    opacity: 0;
+                    transform: translateX(-30px);
+                }
+                to {
+                    opacity: 1;
+                    transform: translateX(0);
+                }
+            }
+            @keyframes slideInRight {
+                from {
+                    opacity: 0;
+                    transform: translateX(30px);
+                }
+                to {
+                    opacity: 1;
+                    transform: translateX(0);
+                }
+            }
+
+            .hero-text-animate {
+                animation: slideInLeft 0.8s ease-out forwards;
+            }
+            .hero-video-animate {
+                animation: slideInRight 0.8s ease-out forwards;
+            }
+
+            .text-gradient {
+                background: linear-gradient(
+                    90deg,
+                    var(--color-primary-accent),
+                    var(--color-secondary-accent)
+                );
+                -webkit-background-clip: text;
+                -webkit-text-fill-color: transparent;
+                background-clip: text;
+                text-fill-color: transparent;
+            }
+
+            #hero {
+                background: radial-gradient(
+                    ellipse at 50% -20%,
+                    var(--color-dark-card),
+                    var(--color-dark-main) 70%
+                );
+            }
+
+            /* Button styling */
+            .btn {
+                display: inline-block;
+                padding: 0.75rem 2rem;
+                border-radius: 9999px;
+                font-weight: 700;
+                text-align: center;
+                transition: all 0.3s ease;
+            }
+            .btn-primary {
+                background-color: var(--color-primary-accent);
+                color: var(--color-dark-main);
+                box-shadow: 0 4px 15px rgba(129, 229, 184, 0.3);
+            }
+            .btn-primary:hover {
+                transform: translateY(-3px) scale(1.05);
+                box-shadow: 0 6px 20px rgba(129, 229, 184, 0.5);
+            }
+
+            /* Card styling */
             .custom-card {
-                background-color: #2a2a4a; /* Slightly lighter dark background for cards */
+                background-color: var(--color-dark-card);
                 border: 1px solid #3a3a5a;
                 box-shadow: 0 4px 15px rgba(0, 0, 0, 0.3);
                 transition: transform 0.3s ease-in-out;
             }
-
             .custom-card:hover {
                 transform: translateY(-5px);
             }
 
-            /* SVG icon styling for general use */
-            .icon {
-                width: 24px;
-                height: 24px;
-                fill: currentColor;
-                flex-shrink: 0; /* Prevent icon from shrinking in flex containers */
-            }
-
-            /* Responsive video embed */
+            /* Video container */
             .video-container {
                 position: relative;
                 width: 100%;
-                padding-bottom: 56.25%; /* 16:9 Aspect Ratio */
+                padding-bottom: 56.25%;
                 height: 0;
                 overflow: hidden;
-                border-radius: 1rem; /* Rounded corners for video */
-                box-shadow: 0 4px 15px rgba(0, 0, 0, 0.4);
+                border-radius: 1rem;
+                box-shadow: 0 8px 30px rgba(0, 0, 0, 0.5);
+                background: rgba(42, 42, 74, 0.2);
+                backdrop-filter: blur(5px);
+                border: 1px solid rgba(255, 255, 255, 0.1);
             }
-
             .video-container iframe {
                 position: absolute;
                 top: 0;
@@ -113,80 +177,32 @@
                 border: 0;
             }
 
-            /* Custom button styling */
-            .btn-primary {
-                display: inline-block;
-                padding: 0.75rem 2rem;
-                border-radius: 9999px; /* Fully rounded */
-                font-weight: 700; /* Bold */
-                text-align: center;
-                background-color: var(--color-primary-accent);
-                color: #1a1a2e; /* Dark text for contrast */
-                transition: background-color 0.3s ease, transform 0.2s ease;
-                box-shadow: 0 4px 10px rgba(0, 224, 255, 0.4); /* Shadow matching primary accent */
-            }
-
-            .btn-primary:hover {
-                background-color: #6eead4; /* Slightly darker primary accent on hover */
-                transform: translateY(-2px);
-                box-shadow: 0 6px 12px rgba(0, 224, 255, 0.6);
-            }
-
-            /* Adjustments for text inside cards to ensure left alignment and reasonable width */
-            .custom-card p,
-            .bundle-detail-card p {
-                max-width: 100%; /* Allow text to fill card width */
-                margin-left: 0; /* Ensure left alignment */
-                margin-right: auto;
-                text-align: left; /* Explicitly left-align */
-            }
-            /* Removed specific list styling to allow paragraphs to flow */
-            .custom-card .content-paragraph-group p {
-                margin-bottom: 0.5rem; /* Spacing between paragraphs in a group */
-            }
-            .custom-card .content-paragraph-group p:last-child {
-                margin-bottom: 0;
-            }
-
-            /* Flex container for text and image in sections */
+            /* Content with image layout */
             .content-with-image {
                 display: flex;
-                flex-direction: column; /* Default to column on mobile */
-                align-items: center; /* Center content on mobile */
+                flex-direction: column;
+                align-items: center;
                 gap: 1.5rem;
             }
-
-            .content-with-image .text-content {
-                flex-grow: 1;
-                text-align: center; /* Center text on mobile */
-            }
-
-            .content-with-image img {
-                max-width: 100%;
-                height: auto;
-                border-radius: 0.75rem;
-                box-shadow: 0 4px 10px rgba(0, 0, 0, 0.3);
-            }
-
             @media (min-width: 768px) {
                 .content-with-image {
-                    flex-direction: row; /* Row on desktop */
-                    align-items: flex-start; /* Align content to start */
+                    flex-direction: row;
+                    align-items: flex-start;
                 }
                 .content-with-image.image-right img {
-                    order: 2; /* Image on right */
+                    order: 2;
                 }
                 .content-with-image.image-left img {
-                    order: 1; /* Image on left */
+                    order: 1;
                 }
                 .content-with-image .text-content {
-                    text-align: left; /* Left align text on desktop */
+                    text-align: left;
                 }
             }
 
             /* Tabs styling */
             .tabs-container {
-                background-color: #2a2a4a;
+                background-color: var(--color-dark-card);
                 border-radius: 1rem;
                 padding: 1.5rem;
                 box-shadow: 0 4px 15px rgba(0, 0, 0, 0.3);
@@ -210,7 +226,7 @@
             }
             .tab-button.active {
                 background-color: var(--color-primary-accent);
-                color: #1a1a2e;
+                color: var(--color-dark-main);
             }
             .tab-content {
                 display: none;
@@ -221,7 +237,7 @@
 
             /* Accordion styling */
             .accordion-item {
-                background-color: #2a2a4a;
+                background-color: var(--color-dark-card);
                 border: 1px solid #3a3a5a;
                 border-radius: 0.75rem;
                 margin-bottom: 0.75rem;
@@ -254,759 +270,1005 @@
                 transition: max-height 0.5s ease-out, padding 0.5s ease-out;
             }
             .accordion-content.active {
-                max-height: 500px; /* Adjust as needed for content height */
+                max-height: 500px;
                 padding-top: 1rem;
                 padding-bottom: 1.5rem;
+            }
+
+            /* --- Navigation Header Styles --- */
+            .nav-header {
+                transition: background-color 0.3s ease, box-shadow 0.3s ease;
+            }
+            .nav-header.scrolled {
+                background-color: rgba(26, 26, 46, 0.85);
+                backdrop-filter: blur(10px);
+                box-shadow: 0 2px 10px rgba(0, 0, 0, 0.3);
+            }
+            .nav-link {
+                position: relative;
+                transition: color 0.3s ease;
+            }
+            .nav-link::after {
+                content: "";
+                position: absolute;
+                width: 0;
+                height: 2px;
+                bottom: -4px;
+                left: 50%;
+                transform: translateX(-50%);
+                background-color: var(--color-primary-accent);
+                transition: width 0.3s ease;
+            }
+            .nav-link:hover,
+            .nav-link.active {
+                color: var(--color-primary-accent);
+            }
+            .nav-link:hover::after,
+            .nav-link.active::after {
+                width: 100%;
+            }
+
+            /* --- Back to Top Button Styles --- */
+            #back-to-top {
+                position: fixed;
+                bottom: 2rem;
+                right: 2rem;
+                width: 3rem;
+                height: 3rem;
+                border-radius: 50%;
+                background-color: var(--color-primary-accent);
+                color: var(--color-dark-main);
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                z-index: 999;
+                opacity: 0;
+                visibility: hidden;
+                transform: translateY(20px);
+                transition: opacity 0.3s ease, visibility 0.3s ease,
+                    transform 0.3s ease;
+                box-shadow: 0 4px 10px rgba(129, 229, 184, 0.4);
+            }
+            #back-to-top.visible {
+                opacity: 1;
+                visibility: visible;
+                transform: translateY(0);
+            }
+            #back-to-top:hover {
+                transform: scale(1.1);
+            }
+
+            /* --- Mobile Navigation Styles --- */
+            #mobile-menu {
+                transform: translateX(100%);
+                transition: transform 0.3s ease-in-out;
+            }
+            #mobile-menu.active {
+                transform: translateX(0);
             }
         </style>
     </head>
     <body class="min-h-screen flex flex-col">
-        <!-- Header Section -->
-        <header class="bg-gray-900 text-white py-6 shadow-lg">
-            <div class="container mx-auto px-4 text-center">
-                <h1
-                    class="text-4xl md:text-5xl font-bold text-primary-accent rounded-lg p-2 inline-block"
-                >
-                    BE Products & Opportunity
-                </h1>
-                <p class="mt-2 text-lg text-gray-300 font-light">
-                    Your Path to a Better Experience
-                </p>
+        <!-- Navigation Header -->
+        <header
+            id="nav-header"
+            class="nav-header fixed top-0 left-0 right-0 z-50"
+        >
+            <div class="container mx-auto px-4 max-w-6xl">
+                <nav class="flex justify-between items-center py-4">
+                    <a href="#" class="text-2xl font-bold text-gradient">BE</a>
+                    <!-- Desktop Menu -->
+                    <ul class="hidden md:flex items-center space-x-8">
+                        <li>
+                            <a
+                                href="#sagemaster-crypto"
+                                class="nav-link font-semibold"
+                                >Products</a
+                            >
+                        </li>
+                        <li>
+                            <a
+                                href="#safety-first"
+                                class="nav-link font-semibold"
+                                >Safety</a
+                            >
+                        </li>
+                        <li>
+                            <a
+                                href="#wow-platform"
+                                class="nav-link font-semibold"
+                                >Education</a
+                            >
+                        </li>
+                        <li>
+                            <a href="#community" class="nav-link font-semibold"
+                                >Community</a
+                            >
+                        </li>
+                        <li>
+                            <a
+                                href="#affiliate-cta"
+                                class="nav-link font-semibold"
+                                >Affiliate</a
+                            >
+                        </li>
+                    </ul>
+                    <!-- Mobile Menu Button -->
+                    <div class="md:hidden">
+                        <button
+                            id="hamburger-btn"
+                            class="text-white focus:outline-none"
+                        >
+                            <svg
+                                class="w-6 h-6"
+                                fill="none"
+                                stroke="currentColor"
+                                viewBox="0 0 24 24"
+                                xmlns="http://www.w3.org/2000/svg"
+                            >
+                                <path
+                                    stroke-linecap="round"
+                                    stroke-linejoin="round"
+                                    stroke-width="2"
+                                    d="M4 6h16M4 12h16m-7 6h7"
+                                ></path>
+                            </svg>
+                        </button>
+                    </div>
+                </nav>
             </div>
         </header>
 
+        <!-- Mobile Navigation Menu -->
+        <div
+            id="mobile-menu"
+            class="fixed top-0 right-0 h-full w-2/3 max-w-xs bg-gray-900 shadow-lg z-40 pt-20 p-8"
+        >
+            <ul class="flex flex-col space-y-8">
+                <li>
+                    <a
+                        href="#sagemaster-crypto"
+                        class="mobile-nav-link text-lg font-semibold text-gray-300 hover:text-primary-accent transition-colors"
+                        >Products</a
+                    >
+                </li>
+                <li>
+                    <a
+                        href="#safety-first"
+                        class="mobile-nav-link text-lg font-semibold text-gray-300 hover:text-primary-accent transition-colors"
+                        >Safety</a
+                    >
+                </li>
+                <li>
+                    <a
+                        href="#wow-platform"
+                        class="mobile-nav-link text-lg font-semibold text-gray-300 hover:text-primary-accent transition-colors"
+                        >Education</a
+                    >
+                </li>
+                <li>
+                    <a
+                        href="#community"
+                        class="mobile-nav-link text-lg font-semibold text-gray-300 hover:text-primary-accent transition-colors"
+                        >Community</a
+                    >
+                </li>
+                <li>
+                    <a
+                        href="#affiliate-cta"
+                        class="mobile-nav-link text-lg font-semibold text-gray-300 hover:text-primary-accent transition-colors"
+                        >Affiliate</a
+                    >
+                </li>
+            </ul>
+        </div>
+        <div
+            id="mobile-menu-overlay"
+            class="hidden fixed inset-0 bg-black/50 z-30"
+        ></div>
+
         <!-- Main Content -->
-        <main class="flex-grow container mx-auto px-4 py-12 max-w-6xl">
+        <main class="flex-grow">
             <!-- Hero Section -->
-            <section id="hero" class="mb-16 animate-fade-in text-center">
-                <h2
-                    class="text-3xl md:text-4xl font-extrabold text-secondary-accent mb-6"
-                >
-                    Presenting the BE Opportunity
-                </h2>
-                <p
-                    class="text-lg leading-relaxed font-light mb-8 max-w-3xl mx-auto"
-                >
-                    Discover how many people are creating online incomes and
-                    increasing their portfolios using smart AI-integrated
-                    strategies. BE is trusted by hundreds of thousands in over a
-                    hundred countries. It's not just a platform; it's a global
-                    movement combining online trading, education, and AI tools
-                    to help you understand markets better and generate online
-                    income.
-                </p>
-                <p
-                    class="text-xl leading-relaxed font-medium mb-10 text-primary-accent max-w-3xl mx-auto"
-                >
-                    Watch this video to learn more, or browse this page for a
-                    detailed overview!
-                </p>
-                <div class="max-w-2xl mx-auto">
-                    <div class="video-container mb-12 mx-auto">
-                        <iframe
-                            src="https://www.youtube.com/embed/rTN4BO1TIiI"
-                            frameborder="0"
-                            allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
-                            allowfullscreen
-                        ></iframe>
+            <section id="hero" class="relative overflow-hidden pt-20">
+                <div class="container mx-auto px-4 py-20 md:py-28 max-w-6xl">
+                    <div class="grid md:grid-cols-2 gap-12 items-center">
+                        <!-- Left Column: Text Content -->
+                        <div class="text-center md:text-left hero-text-animate">
+                            <h1
+                                class="text-4xl md:text-5xl lg:text-6xl font-black mb-4 leading-tight"
+                            >
+                                Unlock Your
+                                <span class="text-gradient"
+                                    >Financial Future</span
+                                >
+                                with BE
+                            </h1>
+                            <p
+                                class="text-lg md:text-xl text-gray-300 mb-10 font-light max-w-xl mx-auto md:mx-0"
+                            >
+                                Join a global movement using AI-integrated tools
+                                to build online income and grow your portfolio.
+                                Your path to a better experience starts here.
+                            </p>
+                            <div
+                                class="flex flex-col sm:flex-row justify-center md:justify-start gap-4"
+                            >
+                                <a
+                                    href="#sagemaster-crypto"
+                                    class="btn btn-primary"
+                                    >Explore Products</a
+                                >
+                            </div>
+                        </div>
+
+                        <!-- Right Column: Video -->
+                        <div class="hero-video-animate">
+                            <div class="video-container">
+                                <iframe
+                                    src="https://www.youtube.com/embed/rTN4BO1TIiI"
+                                    frameborder="0"
+                                    allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+                                    allowfullscreen
+                                ></iframe>
+                            </div>
+                        </div>
                     </div>
                 </div>
-
-                <p class="text-lg leading-relaxed font-light max-w-3xl mx-auto">
-                    By the end of this presentation, you'll have a clear path on
-                    how you can add another online income stream or create your
-                    very first. Let's get right into it!
-                </p>
             </section>
 
-            <!-- Sagemaster Crypto Section -->
-            <section id="sagemaster-crypto" class="mb-16 animate-fade-in">
-                <h2 class="text-3xl md:text-4xl font-extrabold section-title">
-                    SageMaster Crypto
-                </h2>
-                <p class="text-lg leading-relaxed font-light mb-8 max-w-3xl">
-                    SageMaster is BE's flagship product, internationally
-                    recognized as the most developed AI-integrated tool in the
-                    trading space. It offers intuitive platforms to leverage AI
-                    for profitable trading in crypto.
-                </p>
+            <!-- The rest of your page content starts here -->
+            <div class="container mx-auto px-4 py-12 max-w-6xl">
+                <!-- Sagemaster Crypto Section -->
+                <section id="sagemaster-crypto" class="mb-16 animate-fade-in">
+                    <h2
+                        class="text-3xl md:text-4xl font-extrabold section-title"
+                    >
+                        SageMaster Crypto
+                    </h2>
+                    <p
+                        class="text-lg leading-relaxed font-light mb-8 max-w-3xl"
+                    >
+                        SageMaster is BE's flagship product, internationally
+                        recognized as the most developed AI-integrated tool in
+                        the trading space. It offers intuitive platforms to
+                        leverage AI for profitable trading in crypto.
+                    </p>
 
-                <div class="tabs-container">
-                    <div class="tab-buttons">
-                        <button class="tab-button active" data-tab="ai-basket">
-                            AI Basket
-                        </button>
-                        <button class="tab-button" data-tab="ai-grid">
-                            AI Grid
-                        </button>
-                        <button class="tab-button" data-tab="omni-assist">
-                            Omni Assist
-                        </button>
-                        <button class="tab-button" data-tab="providers">
-                            Providers
-                        </button>
-                    </div>
+                    <div class="tabs-container">
+                        <div class="tab-buttons">
+                            <button
+                                class="tab-button active"
+                                data-tab="ai-basket"
+                            >
+                                AI Basket
+                            </button>
+                            <button class="tab-button" data-tab="ai-grid">
+                                AI Grid
+                            </button>
+                            <button class="tab-button" data-tab="omni-assist">
+                                Omni Assist
+                            </button>
+                            <button class="tab-button" data-tab="providers">
+                                Providers
+                            </button>
+                        </div>
 
-                    <div id="ai-basket" class="tab-content active">
-                        <div
-                            class="custom-card p-6 rounded-xl shadow-lg content-with-image image-right"
-                        >
-                            <div class="text-content">
-                                <h3
-                                    class="text-2xl font-semibold text-secondary-accent mb-3"
-                                >
-                                    AI Basket: Your Crypto Fund!
-                                </h3>
-                                <p
-                                    class="text-lg leading-relaxed font-light mb-4"
-                                >
-                                    Build your own portfolio and let AI Basket
-                                    manage them for you.
-                                </p>
-                                <div
-                                    class="content-paragraph-group text-lg space-y-2 font-light"
-                                >
-                                    <p>
-                                        <span
-                                            class="font-bold text-primary-accent"
-                                            >DCA - Dollar Cost Averaging:</span
-                                        >
-                                        Grow your money steadily by investing
-                                        the same amount regularly, buying more
-                                        when prices are low and less when
-                                        they’re high.
+                        <div id="ai-basket" class="tab-content active">
+                            <div
+                                class="custom-card p-6 rounded-xl shadow-lg content-with-image image-right"
+                            >
+                                <div class="text-content">
+                                    <h3
+                                        class="text-2xl font-semibold text-secondary-accent mb-3"
+                                    >
+                                        AI Basket: Your Crypto Fund!
+                                    </h3>
+                                    <p
+                                        class="text-lg leading-relaxed font-light mb-4"
+                                    >
+                                        Build your own portfolio and let AI
+                                        Basket manage them for you.
                                     </p>
-                                    <p>
-                                        <span
-                                            class="font-bold text-primary-accent"
-                                            >Auto Re-balancing:</span
-                                        >
-                                        Locks in gains, cuts risk, and keeps
-                                        your crypto portfolio on track
+                                    <div
+                                        class="content-paragraph-group text-lg space-y-2 font-light"
+                                    >
+                                        <p>
+                                            <span
+                                                class="font-bold text-primary-accent"
+                                                >DCA - Dollar Cost
+                                                Averaging:</span
+                                            >
+                                            Grow your money steadily by
+                                            investing the same amount regularly,
+                                            buying more when prices are low and
+                                            less when they’re high.
+                                        </p>
+                                        <p>
+                                            <span
+                                                class="font-bold text-primary-accent"
+                                                >Auto Re-balancing:</span
+                                            >
+                                            Locks in gains, cuts risk, and keeps
+                                            your crypto portfolio on track
+                                            automatically.
+                                        </p>
+                                        <p>
+                                            <span
+                                                class="font-bold text-primary-accent"
+                                                >Automatic Investments:</span
+                                            >
+                                            You can turn on auto investments if
+                                            you like! Choose how much, set it
+                                            and forget it.
+                                        </p>
+                                    </div>
+                                </div>
+                                <img
+                                    src="https://placehold.co/300x200/2a2a4a/ddcde6?text=AI+Basket"
+                                    alt="AI Basket Placeholder"
+                                    class="md:w-1/3"
+                                />
+                            </div>
+                        </div>
+
+                        <div id="ai-grid" class="tab-content">
+                            <div
+                                class="custom-card p-6 rounded-xl shadow-lg content-with-image image-left"
+                            >
+                                <div class="text-content">
+                                    <h3
+                                        class="text-2xl font-semibold text-secondary-accent mb-3"
+                                    >
+                                        AI Grid: Automated Trading
+                                    </h3>
+                                    <p
+                                        class="text-lg leading-relaxed font-light mb-4"
+                                    >
+                                        Automates crypto trading, executing
+                                        tailored buy/sell orders to secure
+                                        profits within your budget.
+                                    </p>
+                                    <div
+                                        class="content-paragraph-group text-lg space-y-2 font-light"
+                                    >
+                                        <p>
+                                            <span
+                                                class="font-bold text-primary-accent"
+                                                >Money Work For You:</span
+                                            >
+                                            Set a budget; it creates buy/sell
+                                            orders according to your strategy
+                                            and cashes out small profits.
+                                        </p>
+                                        <p>
+                                            <span
+                                                class="font-bold text-primary-accent"
+                                                >Never Sell on a Loss:</span
+                                            >
+                                            AI Grid helps you stay on top of
+                                            market ups and downs, ensuring you
+                                            never miss a sell opportunity.
+                                        </p>
+                                        <p>
+                                            <span
+                                                class="font-bold text-primary-accent"
+                                                >Ease of Use:</span
+                                            >
+                                            Choose your coin, let AI set up, or
+                                            tailor the strategy. Give it an
+                                            allowance and let it run.
+                                        </p>
+                                    </div>
+                                </div>
+                                <img
+                                    src="https://placehold.co/300x200/2a2a4a/ddcde6?text=AI+Grid"
+                                    alt="AI Grid Placeholder"
+                                    class="md:w-1/3"
+                                />
+                            </div>
+                        </div>
+
+                        <div id="omni-assist" class="tab-content">
+                            <div
+                                class="custom-card p-6 rounded-xl shadow-lg content-with-image image-right"
+                            >
+                                <div class="text-content">
+                                    <h3
+                                        class="text-2xl font-semibold text-secondary-accent mb-3"
+                                    >
+                                        OMNI ASSIST: Safety in Uncertain Markets
+                                    </h3>
+                                    <p
+                                        class="text-lg leading-relaxed font-light mb-4"
+                                    >
+                                        AI GRID + DCA sub-grid fail safes to
+                                        secure returns even after a dip -
+                                        powered by AI.
+                                    </p>
+                                    <div
+                                        class="content-paragraph-group text-lg space-y-2 font-light"
+                                    >
+                                        <p>
+                                            <span
+                                                class="font-bold text-primary-accent"
+                                                >Market Direction?:</span
+                                            >
+                                            Create strategies that save you from
+                                            big dips with minimal uptrends.
+                                        </p>
+                                        <p>
+                                            <span
+                                                class="font-bold text-primary-accent"
+                                                >Never Sell on a Loss:</span
+                                            >
+                                            Omni sells when the opportunity
+                                            hits, even if markets dip. Buy in
+                                            ups and downs, but only sells high.
+                                        </p>
+                                        <p>
+                                            <span
+                                                class="font-bold text-primary-accent"
+                                                >Why Use Omni Assist?:</span
+                                            >
+                                            Profits in downtrends using a "rainy
+                                            day" budget to earn returns even if
+                                            the coin never recovers fully.
+                                        </p>
+                                    </div>
+                                </div>
+                                <img
+                                    src="https://placehold.co/300x200/2a2a4a/ddcde6?text=Omni+Assist"
+                                    alt="Omni Assist Placeholder"
+                                    class="md:w-1/3"
+                                />
+                            </div>
+                        </div>
+
+                        <div id="providers" class="tab-content">
+                            <div
+                                class="custom-card p-6 rounded-xl shadow-lg content-with-image image-left"
+                            >
+                                <div class="text-content">
+                                    <h3
+                                        class="text-2xl font-semibold text-secondary-accent mb-3"
+                                    >
+                                        Providers: Mirror Pro Traders’ Decisions
+                                    </h3>
+                                    <p
+                                        class="text-lg leading-relaxed font-light mb-4"
+                                    >
+                                        Set your own risk limits while experts
+                                        time the market for you.
+                                    </p>
+                                    <div
+                                        class="content-paragraph-group text-lg space-y-2 font-light"
+                                    >
+                                        <p>
+                                            <span
+                                                class="font-bold text-primary-accent"
+                                                >AI Driven Copytrading:</span
+                                            >
+                                            Use elite traders' AI-driven
+                                            strategies so you never miss a
+                                            trade.
+                                        </p>
+                                        <p>
+                                            <span
+                                                class="font-bold text-primary-accent"
+                                                >More Leverage?:</span
+                                            >
+                                            Trade ideas with or without
+                                            leverage. Set your own limits or let
+                                            the provider do it.
+                                        </p>
+                                        <p>
+                                            <span
+                                                class="font-bold text-primary-accent"
+                                                >Elite Traders:</span
+                                            >
+                                            Our signal providers are top-tier
+                                            professionals with proven results.
+                                        </p>
+                                    </div>
+                                </div>
+                                <img
+                                    src="https://placehold.co/300x200/2a2a4a/ddcde6?text=Providers"
+                                    alt="Providers Placeholder"
+                                    class="md:w-1/3"
+                                />
+                            </div>
+                        </div>
+                    </div>
+                    <div class="max-w-2xl mx-auto">
+                        <div class="video-container mt-8 mx-auto">
+                            <iframe
+                                src="https://www.youtube.com/embed/nkQd30fTLdg?start=9"
+                                frameborder="0"
+                                allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+                                allowfullscreen
+                            ></iframe>
+                        </div>
+                    </div>
+                </section>
+
+                <!-- SAFETY FIRST Section -->
+                <section id="safety-first" class="mb-16 animate-fade-in">
+                    <h2
+                        class="text-3xl md:text-4xl font-extrabold section-title text-center"
+                    >
+                        SAFETY FIRST
+                    </h2>
+                    <div
+                        class="bg-gradient-to-br from-gray-800 to-gray-900 p-8 rounded-xl shadow-lg flex flex-col md:flex-row items-center gap-6 border border-primary-accent"
+                    >
+                        <div class="flex-shrink-0">
+                            <img
+                                src="https://placehold.co/100x100/1a1a2e/ddcde6?text=Secure"
+                                alt="Security Icon Placeholder"
+                                class="rounded-full"
+                            />
+                        </div>
+                        <div class="flex-grow text-center md:text-left">
+                            <p
+                                class="text-xl leading-relaxed font-medium text-secondary-accent mb-4"
+                            >
+                                Your security is our top priority. We ensure
+                                your assets are always safe and under your
+                                control.
+                            </p>
+                            <div
+                                class="content-paragraph-group text-lg space-y-2 font-light"
+                            >
+                                <p>
+                                    <span class="font-bold text-primary-accent"
+                                        >We Don't Store Assets:</span
+                                    >
+                                    SageMaster is a trade idea provider driven
+                                    by AI. Your assets are never stored on our
+                                    platform.
+                                </p>
+                                <p>
+                                    <span class="font-bold text-primary-accent"
+                                        >Supported Exchanges:</span
+                                    >
+                                    We collaborate only with the safest
+                                    exchanges (Binance, Kucoin, Bybit, etc.) to
+                                    ensure your safety.
+                                </p>
+                                <p>
+                                    <span class="font-bold text-primary-accent"
+                                        >Connect with API:</span
+                                    >
+                                    Connect your exchange to SageMaster through
+                                    your API key. This means we can only tell
+                                    your exchange when to buy or sell, never
+                                    access your funds directly.
+                                </p>
+                            </div>
+                        </div>
+                    </div>
+                </section>
+
+                <!-- Sagemaster Forex Section -->
+                <section id="sagemaster-forex" class="mb-16 animate-fade-in">
+                    <h2
+                        class="text-3xl md:text-4xl font-extrabold section-title"
+                    >
+                        SageMaster Forex
+                    </h2>
+                    <p
+                        class="text-lg leading-relaxed font-light mb-8 max-w-3xl"
+                    >
+                        SageMaster also extends its powerful AI capabilities to
+                        the Forex market, allowing you to seamlessly leverage
+                        expert strategies.
+                    </p>
+
+                    <div class="accordion-item">
+                        <div class="accordion-header active">
+                            <h3 class="text-2xl font-semibold">
+                                Automated Expert Trading
+                            </h3>
+                            <span class="arrow text-primary-accent"
+                                >&#9654;</span
+                            >
+                        </div>
+                        <div class="accordion-content active">
+                            <div
+                                class="custom-card p-6 rounded-xl shadow-lg mt-4 content-with-image image-right"
+                            >
+                                <div class="text-content">
+                                    <p
+                                        class="text-lg leading-relaxed font-light mb-4"
+                                    >
+                                        SageMaster Forex simplifies trading by
+                                        breaking down complex strategies into
+                                        three easy clicks.
+                                    </p>
+                                    <div
+                                        class="content-paragraph-group text-lg space-y-2 font-light"
+                                    >
+                                        <p>
+                                            <span
+                                                class="font-bold text-primary-accent"
+                                                >Connect Your Broker:</span
+                                            >
+                                            Your money remains secure in your
+                                            own brokerage account. BE only
+                                            connects to your account, never
+                                            holding your funds.
+                                        </p>
+                                        <p>
+                                            <span
+                                                class="font-bold text-primary-accent"
+                                                >Automated Reflection:</span
+                                            >
+                                            Whatever the professional trader
+                                            (provider) does, it is automatically
+                                            reflected in your account based on
+                                            your chosen risk management
+                                            settings.
+                                        </p>
+                                        <p>
+                                            <span
+                                                class="font-bold text-primary-accent"
+                                                >Seamless Execution:</span
+                                            >
+                                            Trades are opened and closed in your
+                                            account in real-time, whether you're
+                                            working, sleeping, or at the gym.
+                                        </p>
+                                    </div>
+                                    <p
+                                        class="text-sm text-gray-400 font-light mt-4"
+                                    >
+                                        *Example: If a Forex provider buys gold,
+                                        that trade is reflected in your account
+                                        with your 1% risk setup. When they close
+                                        it, it closes in your account
                                         automatically.
                                     </p>
-                                    <p>
-                                        <span
-                                            class="font-bold text-primary-accent"
-                                            >Automatic Investments:</span
-                                        >
-                                        You can turn on auto investments if you
-                                        like! Choose how much, set it and forget
-                                        it.
-                                    </p>
                                 </div>
+                                <img
+                                    src="https://placehold.co/300x200/2a2a4a/ddcde6?text=Forex+Trading"
+                                    alt="Forex Trading Placeholder"
+                                    class="md:w-1/3"
+                                />
                             </div>
-                            <img
-                                src="https://placehold.co/300x200/2a2a4a/ddcde6?text=AI+Basket"
-                                alt="AI Basket Placeholder"
-                                class="md:w-1/3"
-                            />
                         </div>
                     </div>
 
-                    <div id="ai-grid" class="tab-content">
-                        <div
-                            class="custom-card p-6 rounded-xl shadow-lg content-with-image image-left"
-                        >
-                            <div class="text-content">
-                                <h3
-                                    class="text-2xl font-semibold text-secondary-accent mb-3"
-                                >
-                                    AI Grid: Automated Trading
-                                </h3>
-                                <p
-                                    class="text-lg leading-relaxed font-light mb-4"
-                                >
-                                    Automates crypto trading, executing tailored
-                                    buy/sell orders to secure profits within
-                                    your budget.
+                    <div class="accordion-item">
+                        <div class="accordion-header">
+                            <h3 class="text-2xl font-semibold">
+                                Trade Idea Apps (Relic, Shift, Titan)
+                            </h3>
+                            <span class="arrow text-primary-accent"
+                                >&#9654;</span
+                            >
+                        </div>
+                        <div class="accordion-content">
+                            <div
+                                class="custom-card p-6 rounded-xl shadow-lg mt-4 content-with-image image-left"
+                            >
+                                <div class="text-content">
+                                    <p
+                                        class="text-lg leading-relaxed font-light mb-4"
+                                    >
+                                        Beyond automation, BE also provides
+                                        smart apps like Relic, Shift, and Titan,
+                                        available on App Store and Google Play
+                                        Store.
+                                    </p>
+                                    <div
+                                        class="content-paragraph-group text-lg space-y-2 font-light"
+                                    >
+                                        <p>
+                                            <span
+                                                class="font-bold text-primary-accent"
+                                                >Professional Alerts:</span
+                                            >
+                                            Receive real-time trade ideas
+                                            (alerts) from professional traders
+                                            vetted and monitored by BE.
+                                        </p>
+                                        <p>
+                                            <span
+                                                class="font-bold text-primary-accent"
+                                                >Copy & Paste:</span
+                                            >
+                                            Simply copy and paste the
+                                            information from the alert into your
+                                            brokerage account to profit.
+                                        </p>
+                                        <p>
+                                            <span
+                                                class="font-bold text-primary-accent"
+                                                >Diverse Markets:</span
+                                            >
+                                            Alerts cover crypto, forex, and
+                                            indices (like gold).
+                                        </p>
+                                    </div>
+                                </div>
+                                <img
+                                    src="https://placehold.co/300x200/2a2a4a/ddcde6?text=Trade+Apps"
+                                    alt="Trade Apps Placeholder"
+                                    class="md:w-1/3"
+                                />
+                            </div>
+                        </div>
+                    </div>
+                </section>
+
+                <!-- WOW - World of Wisdom Section -->
+                <section id="wow-platform" class="mb-16 animate-fade-in">
+                    <h2
+                        class="text-3xl md:text-4xl font-extrabold section-title"
+                    >
+                        WOW - World of Wisdom
+                    </h2>
+                    <p
+                        class="text-lg leading-relaxed font-light mb-8 max-w-3xl"
+                    >
+                        The World of Wisdom (WOW) is BE's comprehensive
+                        e-learning platform, designed to provide you with the
+                        financial education you need to succeed in the markets.
+                    </p>
+
+                    <div
+                        class="custom-card p-6 rounded-xl shadow-lg content-with-image image-right"
+                    >
+                        <div class="text-content">
+                            <h3
+                                class="text-2xl font-semibold text-secondary-accent mb-3"
+                            >
+                                Your Online Financial University:
+                            </h3>
+                            <p class="text-lg leading-relaxed font-light mb-4">
+                                WOW offers a diverse educational platform,
+                                making complex financial concepts easy to
+                                understand and engaging.
+                            </p>
+                            <div
+                                class="content-paragraph-group text-lg space-y-2 font-light"
+                            >
+                                <p>
+                                    <span class="font-bold text-primary-accent"
+                                        >Core Trading Education:</span
+                                    >
+                                    Learn about Forex trading, Crypto trading,
+                                    Stock trading, and the renowned NXT system
+                                    (a precise and easy-to-learn trading
+                                    system).
                                 </p>
-                                <div
-                                    class="content-paragraph-group text-lg space-y-2 font-light"
-                                >
-                                    <p>
-                                        <span
-                                            class="font-bold text-primary-accent"
-                                            >Money Work For You:</span
-                                        >
-                                        Set a budget; it creates buy/sell orders
-                                        according to your strategy and cashes
-                                        out small profits.
-                                    </p>
-                                    <p>
-                                        <span
-                                            class="font-bold text-primary-accent"
-                                            >Never Sell on a Loss:</span
-                                        >
-                                        AI Grid helps you stay on top of market
-                                        ups and downs, ensuring you never miss a
-                                        sell opportunity.
-                                    </p>
-                                    <p>
-                                        <span
-                                            class="font-bold text-primary-accent"
-                                            >Ease of Use:</span
-                                        >
-                                        Choose your coin, let AI set up, or
-                                        tailor the strategy. Give it an
-                                        allowance and let it run.
-                                    </p>
-                                </div>
-                            </div>
-                            <img
-                                src="https://placehold.co/300x200/2a2a4a/ddcde6?text=AI+Grid"
-                                alt="AI Grid Placeholder"
-                                class="md:w-1/3"
-                            />
-                        </div>
-                    </div>
-
-                    <div id="omni-assist" class="tab-content">
-                        <div
-                            class="custom-card p-6 rounded-xl shadow-lg content-with-image image-right"
-                        >
-                            <div class="text-content">
-                                <h3
-                                    class="text-2xl font-semibold text-secondary-accent mb-3"
-                                >
-                                    OMNI ASSIST: Safety in Uncertain Markets
-                                </h3>
-                                <p
-                                    class="text-lg leading-relaxed font-light mb-4"
-                                >
-                                    AI GRID + DCA sub-grid fail safes to secure
-                                    returns even after a dip - powered by AI.
+                                <p>
+                                    <span class="font-bold text-primary-accent"
+                                        >Mindset & Finance Academy:</span
+                                    >
+                                    Develop a strong financial mindset and
+                                    deepen your understanding of personal
+                                    finance.
                                 </p>
-                                <div
-                                    class="content-paragraph-group text-lg space-y-2 font-light"
-                                >
-                                    <p>
-                                        <span
-                                            class="font-bold text-primary-accent"
-                                            >Market Direction?:</span
-                                        >
-                                        Create strategies that save you from big
-                                        dips with minimal uptrends.
-                                    </p>
-                                    <p>
-                                        <span
-                                            class="font-bold text-primary-accent"
-                                            >Never Sell on a Loss:</span
-                                        >
-                                        Omni sells when the opportunity hits,
-                                        even if markets dip. Buy in ups and
-                                        downs, but only sells high.
-                                    </p>
-                                    <p>
-                                        <span
-                                            class="font-bold text-primary-accent"
-                                            >Why Use Omni Assist?:</span
-                                        >
-                                        Profits in downtrends using a "rainy
-                                        day" budget to earn returns even if the
-                                        coin never recovers fully.
-                                    </p>
-                                </div>
-                            </div>
-                            <img
-                                src="https://placehold.co/300x200/2a2a4a/ddcde6?text=Omni+Assist"
-                                alt="Omni Assist Placeholder"
-                                class="md:w-1/3"
-                            />
-                        </div>
-                    </div>
-
-                    <div id="providers" class="tab-content">
-                        <div
-                            class="custom-card p-6 rounded-xl shadow-lg content-with-image image-left"
-                        >
-                            <div class="text-content">
-                                <h3
-                                    class="text-2xl font-semibold text-secondary-accent mb-3"
-                                >
-                                    Providers: Mirror Pro Traders’ Decisions
-                                </h3>
-                                <p
-                                    class="text-lg leading-relaxed font-light mb-4"
-                                >
-                                    Set your own risk limits while experts time
-                                    the market for you.
+                                <p>
+                                    <span class="font-bold text-primary-accent"
+                                        >Product Academy:</span
+                                    >
+                                    Get in-depth training on all products within
+                                    the BE ecosystem.
                                 </p>
-                                <div
-                                    class="content-paragraph-group text-lg space-y-2 font-light"
-                                >
-                                    <p>
-                                        <span
-                                            class="font-bold text-primary-accent"
-                                            >AI Driven Copytrading:</span
-                                        >
-                                        Use elite traders' AI-driven strategies
-                                        so you never miss a trade.
-                                    </p>
-                                    <p>
-                                        <span
-                                            class="font-bold text-primary-accent"
-                                            >More Leverage?:</span
-                                        >
-                                        Trade ideas with or without leverage.
-                                        Set your own limits or let the provider
-                                        do it.
-                                    </p>
-                                    <p>
-                                        <span
-                                            class="font-bold text-primary-accent"
-                                            >Elite Traders:</span
-                                        >
-                                        Our signal providers are top-tier
-                                        professionals with proven results.
-                                    </p>
-                                </div>
+                                <p>
+                                    <span class="font-bold text-primary-accent"
+                                        >Live & Recorded Sessions:</span
+                                    >
+                                    Access live trading sessions and a vast
+                                    library of recorded sessions available in
+                                    multiple languages, ensuring you can learn
+                                    in your native tongue.
+                                </p>
                             </div>
-                            <img
-                                src="https://placehold.co/300x200/2a2a4a/ddcde6?text=Providers"
-                                alt="Providers Placeholder"
-                                class="md:w-1/3"
-                            />
+                            <p class="text-lg leading-relaxed font-light mt-4">
+                                Information changes your situation. Since
+                                traditional education often lacks financial
+                                literacy, WOW provides this valuable knowledge
+                                to truly change your life and lifestyle.
+                            </p>
                         </div>
-                    </div>
-                </div>
-                <div class="max-w-2xl mx-auto">
-                    <div class="video-container mt-8 mx-auto">
-                        <iframe
-                            src="https://www.youtube.com/embed/nkQd30fTLdg?start=9"
-                            frameborder="0"
-                            allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
-                            allowfullscreen
-                        ></iframe>
-                    </div>
-                </div>
-            </section>
-
-            <!-- SAFETY FIRST Section -->
-            <section id="safety-first" class="mb-16 animate-fade-in">
-                <h2
-                    class="text-3xl md:text-4xl font-extrabold section-title text-center"
-                >
-                    SAFETY FIRST
-                </h2>
-                <div
-                    class="bg-gradient-to-br from-gray-800 to-gray-900 p-8 rounded-xl shadow-lg flex flex-col md:flex-row items-center gap-6 border border-primary-accent"
-                >
-                    <div class="flex-shrink-0">
                         <img
-                            src="https://placehold.co/100x100/1a1a2e/ddcde6?text=Secure"
-                            alt="Security Icon Placeholder"
-                            class="rounded-full"
+                            src="https://placehold.co/300x200/2a2a4a/ddcde6?text=WOW+Platform"
+                            alt="WOW Platform Placeholder"
+                            class="md:w-1/3"
                         />
                     </div>
-                    <div class="flex-grow text-center md:text-left">
-                        <p
-                            class="text-xl leading-relaxed font-medium text-secondary-accent mb-4"
-                        >
-                            Your security is our top priority. We ensure your
-                            assets are always safe and under your control.
-                        </p>
-                        <div
-                            class="content-paragraph-group text-lg space-y-2 font-light"
-                        >
-                            <p>
-                                <span class="font-bold text-primary-accent"
-                                    >We Don't Store Assets:</span
-                                >
-                                SageMaster is a trade idea provider driven by
-                                AI. Your assets are never stored on our
-                                platform.
-                            </p>
-                            <p>
-                                <span class="font-bold text-primary-accent"
-                                    >Supported Exchanges:</span
-                                >
-                                We collaborate only with the safest exchanges
-                                (Binance, Kucoin, Bybit, etc.) to ensure your
-                                safety.
-                            </p>
-                            <p>
-                                <span class="font-bold text-primary-accent"
-                                    >Connect with API:</span
-                                >
-                                Connect your exchange to SageMaster through your
-                                API key. This means we can only tell your
-                                exchange when to buy or sell, never access your
-                                funds directly.
-                            </p>
-                        </div>
-                    </div>
-                </div>
-            </section>
+                </section>
 
-            <!-- Sagemaster Forex Section -->
-            <section id="sagemaster-forex" class="mb-16 animate-fade-in">
-                <h2 class="text-3xl md:text-4xl font-extrabold section-title">
-                    SageMaster Forex
-                </h2>
-                <p class="text-lg leading-relaxed font-light mb-8 max-w-3xl">
-                    SageMaster also extends its powerful AI capabilities to the
-                    Forex market, allowing you to seamlessly leverage expert
-                    strategies.
-                </p>
-
-                <div class="accordion-item">
-                    <div class="accordion-header active">
-                        <h3 class="text-2xl font-semibold">
-                            Automated Expert Trading
-                        </h3>
-                        <span class="arrow text-primary-accent">&#9654;</span>
-                    </div>
-                    <div class="accordion-content active">
-                        <div
-                            class="custom-card p-6 rounded-xl shadow-lg mt-4 content-with-image image-right"
-                        >
-                            <div class="text-content">
-                                <p
-                                    class="text-lg leading-relaxed font-light mb-4"
-                                >
-                                    SageMaster Forex simplifies trading by
-                                    breaking down complex strategies into three
-                                    easy clicks.
+                <!-- MasterGPT Section -->
+                <section id="mastergpt-section" class="mb-16 animate-fade-in">
+                    <h2
+                        class="text-3xl md:text-4xl font-extrabold section-title"
+                    >
+                        MasterGPT: Your AI Trading Assistant
+                    </h2>
+                    <p
+                        class="text-lg leading-relaxed font-light mb-8 max-w-3xl"
+                    >
+                        MasterGPT, launched even before ChatGPT, is BE's
+                        in-house AI designed specifically for trading. It helps
+                        you understand complex investments and become a pro
+                        trader faster.
+                    </p>
+                    <div
+                        class="custom-card p-6 rounded-xl shadow-lg content-with-image image-left"
+                    >
+                        <div class="text-content">
+                            <div
+                                class="content-paragraph-group text-lg space-y-2 font-light"
+                            >
+                                <p>
+                                    <span class="font-bold text-primary-accent"
+                                        >Strategy Assessment:</span
+                                    >
+                                    Ask how your current strategies are
+                                    performing and get updates and suggestions
+                                    for improvement.
                                 </p>
-                                <div
-                                    class="content-paragraph-group text-lg space-y-2 font-light"
-                                >
-                                    <p>
-                                        <span
-                                            class="font-bold text-primary-accent"
-                                            >Connect Your Broker:</span
-                                        >
-                                        Your money remains secure in your own
-                                        brokerage account. BE only connects to
-                                        your account, never holding your funds.
-                                    </p>
-                                    <p>
-                                        <span
-                                            class="font-bold text-primary-accent"
-                                            >Automated Reflection:</span
-                                        >
-                                        Whatever the professional trader
-                                        (provider) does, it is automatically
-                                        reflected in your account based on your
-                                        chosen risk management settings.
-                                    </p>
-                                    <p>
-                                        <span
-                                            class="font-bold text-primary-accent"
-                                            >Seamless Execution:</span
-                                        >
-                                        Trades are opened and closed in your
-                                        account in real-time, whether you're
-                                        working, sleeping, or at the gym.
-                                    </p>
-                                </div>
-                                <p
-                                    class="text-sm text-gray-400 font-light mt-4"
-                                >
-                                    *Example: If a Forex provider buys gold,
-                                    that trade is reflected in your account with
-                                    your 1% risk setup. When they close it, it
-                                    closes in your account automatically.
+                                <p>
+                                    <span class="font-bold text-primary-accent"
+                                        >Market Analysis:</span
+                                    >
+                                    Ask questions about the market ("Should I
+                                    buy Bitcoin right now?"), and it will
+                                    analyze live data to provide insights.
+                                </p>
+                                <p>
+                                    <span class="font-bold text-primary-accent"
+                                        >AI Assist:</span
+                                    >
+                                    Get help setting up your strategies, risk
+                                    management, and money management.
                                 </p>
                             </div>
-                            <img
-                                src="https://placehold.co/300x200/2a2a4a/ddcde6?text=Forex+Trading"
-                                alt="Forex Trading Placeholder"
-                                class="md:w-1/3"
-                            />
+                            <p class="text-sm text-gray-400 font-light mt-4">
+                                *Important: BE never provides financial advice.
+                                Your money is always secure in your own account.
+                                Past results do not guarantee future results.
+                            </p>
                         </div>
+                        <img
+                            src="https://placehold.co/300x200/2a2a4a/ddcde6?text=MasterGPT"
+                            alt="MasterGPT Placeholder"
+                            class="md:w-1/3"
+                        />
                     </div>
-                </div>
+                </section>
 
-                <div class="accordion-item">
-                    <div class="accordion-header">
-                        <h3 class="text-2xl font-semibold">
-                            Trade Idea Apps (Relic, Shift, Titan)
-                        </h3>
-                        <span class="arrow text-primary-accent">&#9654;</span>
-                    </div>
-                    <div class="accordion-content">
-                        <div
-                            class="custom-card p-6 rounded-xl shadow-lg mt-4 content-with-image image-left"
-                        >
-                            <div class="text-content">
-                                <p
-                                    class="text-lg leading-relaxed font-light mb-4"
-                                >
-                                    Beyond automation, BE also provides smart
-                                    apps like Relic, Shift, and Titan, available
-                                    on App Store and Google Play Store.
+                <!-- Community Section -->
+                <section id="community" class="mb-16 animate-fade-in">
+                    <h2
+                        class="text-3xl md:text-4xl font-extrabold section-title"
+                    >
+                        The BE Community
+                    </h2>
+                    <p
+                        class="text-lg leading-relaxed font-light mb-8 max-w-3xl"
+                    >
+                        Beyond the products and education, BE offers an
+                        unparalleled community that is dedicated to your
+                        success.
+                    </p>
+
+                    <div
+                        class="custom-card p-6 rounded-xl shadow-lg content-with-image image-right"
+                    >
+                        <div class="text-content">
+                            <h3
+                                class="text-2xl font-semibold text-secondary-accent mb-3"
+                            >
+                                A Supportive & Empowering Family:
+                            </h3>
+                            <div
+                                class="content-paragraph-group text-lg space-y-2 font-light"
+                            >
+                                <p>
+                                    <span class="font-bold text-primary-accent"
+                                        >Millionaire Mentorship:</span
+                                    >
+                                    Gain insights from experienced individuals
+                                    who have achieved significant success in
+                                    this business.
                                 </p>
-                                <div
-                                    class="content-paragraph-group text-lg space-y-2 font-light"
-                                >
-                                    <p>
-                                        <span
-                                            class="font-bold text-primary-accent"
-                                            >Professional Alerts:</span
-                                        >
-                                        Receive real-time trade ideas (alerts)
-                                        from professional traders vetted and
-                                        monitored by BE.
-                                    </p>
-                                    <p>
-                                        <span
-                                            class="font-bold text-primary-accent"
-                                            >Copy & Paste:</span
-                                        >
-                                        Simply copy and paste the information
-                                        from the alert into your brokerage
-                                        account to profit.
-                                    </p>
-                                    <p>
-                                        <span
-                                            class="font-bold text-primary-accent"
-                                            >Diverse Markets:</span
-                                        >
-                                        Alerts cover crypto, forex, and indices
-                                        (like gold).
-                                    </p>
-                                </div>
+                                <p>
+                                    <span class="font-bold text-primary-accent"
+                                        >Weekly Calls:</span
+                                    >
+                                    Participate in regular calls for affiliates
+                                    and educational sessions to help customers
+                                    become more educated on the products.
+                                </p>
+                                <p>
+                                    <span class="font-bold text-primary-accent"
+                                        >Online Trainings & Marketing
+                                        Tools:</span
+                                    >
+                                    Access resources to help you build your
+                                    business effectively.
+                                </p>
+                                <p>
+                                    <span class="font-bold text-primary-accent"
+                                        >World-Class Events:</span
+                                    >
+                                    Enjoy some of the best events globally,
+                                    featuring exclusive speakers and incredible
+                                    experiences.
+                                </p>
                             </div>
-                            <img
-                                src="https://placehold.co/300x200/2a2a4a/ddcde6?text=Trade+Apps"
-                                alt="Trade Apps Placeholder"
-                                class="md:w-1/3"
-                            />
-                        </div>
-                    </div>
-                </div>
-            </section>
-
-            <!-- WOW - World of Wisdom Section -->
-            <section id="wow-platform" class="mb-16 animate-fade-in">
-                <h2 class="text-3xl md:text-4xl font-extrabold section-title">
-                    WOW - World of Wisdom
-                </h2>
-                <p class="text-lg leading-relaxed font-light mb-8 max-w-3xl">
-                    The World of Wisdom (WOW) is BE's comprehensive e-learning
-                    platform, designed to provide you with the financial
-                    education you need to succeed in the markets.
-                </p>
-
-                <div
-                    class="custom-card p-6 rounded-xl shadow-lg content-with-image image-right"
-                >
-                    <div class="text-content">
-                        <h3
-                            class="text-2xl font-semibold text-secondary-accent mb-3"
-                        >
-                            Your Online Financial University:
-                        </h3>
-                        <p class="text-lg leading-relaxed font-light mb-4">
-                            WOW offers a diverse educational platform, making
-                            complex financial concepts easy to understand and
-                            engaging.
-                        </p>
-                        <div
-                            class="content-paragraph-group text-lg space-y-2 font-light"
-                        >
-                            <p>
-                                <span class="font-bold text-primary-accent"
-                                    >Core Trading Education:</span
-                                >
-                                Learn about Forex trading, Crypto trading, Stock
-                                trading, and the renowned NXT system (a precise
-                                and easy-to-learn trading system).
-                            </p>
-                            <p>
-                                <span class="font-bold text-primary-accent"
-                                    >Mindset & Finance Academy:</span
-                                >
-                                Develop a strong financial mindset and deepen
-                                your understanding of personal finance.
-                            </p>
-                            <p>
-                                <span class="font-bold text-primary-accent"
-                                    >Product Academy:</span
-                                >
-                                Get in-depth training on all products within the
-                                BE ecosystem.
-                            </p>
-                            <p>
-                                <span class="font-bold text-primary-accent"
-                                    >Live & Recorded Sessions:</span
-                                >
-                                Access live trading sessions and a vast library
-                                of recorded sessions available in multiple
-                                languages, ensuring you can learn in your native
-                                tongue.
+                            <p class="text-lg leading-relaxed font-light mt-4">
+                                Here, you will learn, have fun, and be part of a
+                                supportive and protective community, gaining the
+                                best skills to make money online.
                             </p>
                         </div>
-                        <p class="text-lg leading-relaxed font-light mt-4">
-                            Information changes your situation. Since
-                            traditional education often lacks financial
-                            literacy, WOW provides this valuable knowledge to
-                            truly change your life and lifestyle.
-                        </p>
+                        <img
+                            src="https://placehold.co/300x200/2a2a4a/ddcde6?text=Community"
+                            alt="Community Placeholder"
+                            class="md:w-1/3"
+                        />
                     </div>
-                    <img
-                        src="https://placehold.co/300x200/2a2a4a/ddcde6?text=WOW+Platform"
-                        alt="WOW Platform Placeholder"
-                        class="md:w-1/3"
-                    />
-                </div>
-            </section>
+                </section>
 
-            <!-- MasterGPT Section -->
-            <section id="mastergpt-section" class="mb-16 animate-fade-in">
-                <h2 class="text-3xl md:text-4xl font-extrabold section-title">
-                    MasterGPT: Your AI Trading Assistant
-                </h2>
-                <p class="text-lg leading-relaxed font-light mb-8 max-w-3xl">
-                    MasterGPT, launched even before ChatGPT, is BE's in-house AI
-                    designed specifically for trading. It helps you understand
-                    complex investments and become a pro trader faster.
-                </p>
-                <div
-                    class="custom-card p-6 rounded-xl shadow-lg content-with-image image-left"
-                >
-                    <div class="text-content">
-                        <div
-                            class="content-paragraph-group text-lg space-y-2 font-light"
-                        >
-                            <p>
-                                <span class="font-bold text-primary-accent"
-                                    >Strategy Assessment:</span
+                <!-- NEW: Affiliate Call to Action Section -->
+                <section id="affiliate-cta" class="mb-16 animate-fade-in">
+                    <div
+                        class="bg-gradient-to-r from-gray-800 to-gray-900 p-8 md:p-12 rounded-2xl shadow-lg border border-primary-accent/30"
+                    >
+                        <div class="grid md:grid-cols-3 gap-8 items-center">
+                            <div class="md:col-span-2 text-center md:text-left">
+                                <h2
+                                    class="text-3xl md:text-4xl font-extrabold text-secondary-accent mb-4"
                                 >
-                                Ask how your current strategies are performing
-                                and get updates and suggestions for improvement.
-                            </p>
-                            <p>
-                                <span class="font-bold text-primary-accent"
-                                    >Market Analysis:</span
+                                    Earn More as a BE Affiliate
+                                </h2>
+                                <p
+                                    class="text-lg leading-relaxed font-light mb-6 max-w-2xl"
                                 >
-                                Ask questions about the market ("Should I buy
-                                Bitcoin right now?"), and it will analyze live
-                                data to provide insights.
-                            </p>
-                            <p>
-                                <span class="font-bold text-primary-accent"
-                                    >AI Assist:</span
+                                    In addition to benefiting from our products,
+                                    you can create another stream of income by
+                                    sharing them with others. Our rewarding
+                                    compensation plan is designed to help you
+                                    build a sustainable business, with multiple
+                                    ways to earn, from direct commissions to
+                                    team-building bonuses.
+                                </p>
+                                <a
+                                    href="https://opportunity-mu.vercel.app/compensation.html"
+                                    class="btn btn-primary"
                                 >
-                                Get help setting up your strategies, risk
-                                management, and money management.
-                            </p>
+                                    View Compensation Plan
+                                </a>
+                            </div>
+                            <div
+                                class="hidden md:flex justify-center items-center"
+                            >
+                                <svg
+                                    xmlns="http://www.w3.org/2000/svg"
+                                    class="h-32 w-32 text-primary-accent opacity-50"
+                                    fill="none"
+                                    viewBox="0 0 24 24"
+                                    stroke="currentColor"
+                                >
+                                    <path
+                                        stroke-linecap="round"
+                                        stroke-linejoin="round"
+                                        stroke-width="1"
+                                        d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z"
+                                    />
+                                </svg>
+                            </div>
                         </div>
-                        <p class="text-sm text-gray-400 font-light mt-4">
-                            *Important: BE never provides financial advice. Your
-                            money is always secure in your own account. Past
-                            results do not guarantee future results.
-                        </p>
                     </div>
-                    <img
-                        src="https://placehold.co/300x200/2a2a4a/ddcde6?text=MasterGPT"
-                        alt="MasterGPT Placeholder"
-                        class="md:w-1/3"
-                    />
-                </div>
-            </section>
-
-            <!-- Community Section -->
-            <section id="community" class="mb-16 animate-fade-in">
-                <h2 class="text-3xl md:text-4xl font-extrabold section-title">
-                    The BE Community
-                </h2>
-                <p class="text-lg leading-relaxed font-light mb-8 max-w-3xl">
-                    Beyond the products and education, BE offers an unparalleled
-                    community that is dedicated to your success.
-                </p>
-
-                <div
-                    class="custom-card p-6 rounded-xl shadow-lg content-with-image image-right"
-                >
-                    <div class="text-content">
-                        <h3
-                            class="text-2xl font-semibold text-secondary-accent mb-3"
-                        >
-                            A Supportive & Empowering Family:
-                        </h3>
-                        <div
-                            class="content-paragraph-group text-lg space-y-2 font-light"
-                        >
-                            <p>
-                                <span class="font-bold text-primary-accent"
-                                    >Millionaire Mentorship:</span
-                                >
-                                Gain insights from experienced individuals who
-                                have achieved significant success in this
-                                business.
-                            </p>
-                            <p>
-                                <span class="font-bold text-primary-accent"
-                                    >Weekly Calls:</span
-                                >
-                                Participate in regular calls for affiliates and
-                                educational sessions to help customers become
-                                more educated on the products.
-                            </p>
-                            <p>
-                                <span class="font-bold text-primary-accent"
-                                    >Online Trainings & Marketing Tools:</span
-                                >
-                                Access resources to help you build your business
-                                effectively.
-                            </p>
-                            <p>
-                                <span class="font-bold text-primary-accent"
-                                    >World-Class Events:</span
-                                >
-                                Enjoy some of the best events globally,
-                                featuring exclusive speakers and incredible
-                                experiences.
-                            </p>
-                        </div>
-                        <p class="text-lg leading-relaxed font-light mt-4">
-                            Here, you will learn, have fun, and be part of a
-                            supportive and protective community, gaining the
-                            best skills to make money online.
-                        </p>
-                    </div>
-                    <img
-                        src="https://placehold.co/300x200/2a2a4a/ddcde6?text=Community"
-                        alt="Community Placeholder"
-                        class="md:w-1/3"
-                    />
-                </div>
-            </section>
-
-            <!-- Call to Action Section (Compensation Plan) -->
-            <section
-                id="compensation-cta"
-                class="mb-16 animate-fade-in text-center"
-            >
-                <h2
-                    class="text-3xl md:text-4xl font-extrabold text-secondary-accent mb-6"
-                >
-                    Ready to Explore the Income Opportunities?
-                </h2>
-                <p
-                    class="text-lg leading-relaxed font-light mb-8 max-w-3xl mx-auto"
-                >
-                    Discover how you can earn by recommending BE's products and
-                    building your portfolio. The income opportunities in BE are
-                    vast and designed to reward your efforts.
-                </p>
-                <a
-                    href="#"
-                    class="btn-primary"
-                    onclick="alert('In a real website, this button would navigate you to the Compensation Plan page. For this demonstration, it is a placeholder link.'); return false;"
-                >
-                    Learn About the Compensation Plan
-                </a>
-                <p
-                    class="text-sm text-gray-400 font-light mt-4 max-w-3xl mx-auto"
-                >
-                    Don't let this slip – this could be the best opportunity in
-                    your lifetime!
-                </p>
-            </section>
+                </section>
+            </div>
         </main>
 
         <!-- Footer Section -->
@@ -1021,57 +1283,152 @@
             </div>
         </footer>
 
+        <!-- Back to Top Button HTML -->
+        <a href="#" id="back-to-top" title="Back to top">
+            <svg
+                xmlns="http://www.w3.org/2000/svg"
+                class="h-6 w-6"
+                fill="none"
+                viewBox="0 0 24 24"
+                stroke="currentColor"
+            >
+                <path
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
+                    stroke-width="2"
+                    d="M5 15l7-7 7 7"
+                />
+            </svg>
+        </a>
+
+        <!-- REMOVED Modal HTML -->
+
         <script>
-            // Intersection Observer for fade-in animations
-            const sections = document.querySelectorAll(".animate-fade-in");
+            document.addEventListener("DOMContentLoaded", () => {
+                const navHeader = document.getElementById("nav-header");
+                const backToTopButton = document.getElementById("back-to-top");
+                const hamburgerBtn = document.getElementById("hamburger-btn");
+                const mobileMenu = document.getElementById("mobile-menu");
+                const mobileMenuOverlay = document.getElementById(
+                    "mobile-menu-overlay"
+                );
+                const mobileNavLinks =
+                    document.querySelectorAll(".mobile-nav-link");
+                const sections = document.querySelectorAll("section[id]");
+                const navLinks = document.querySelectorAll(".nav-link");
 
-            const observerOptions = {
-                root: null /* viewport */,
-                rootMargin: "0px",
-                threshold: 0.1 /* 10% of element visible */,
-            };
-
-            const observer = new IntersectionObserver((entries, observer) => {
-                entries.forEach((entry) => {
-                    if (entry.isIntersecting) {
-                        entry.target.classList.add("is-visible");
-                        observer.unobserve(entry.target); // Stop observing once visible
+                // --- Navigation Header Scroll Effect ---
+                window.addEventListener("scroll", () => {
+                    if (window.scrollY > 50) {
+                        navHeader.classList.add("scrolled");
+                    } else {
+                        navHeader.classList.remove("scrolled");
                     }
                 });
-            }, observerOptions);
 
-            sections.forEach((section) => {
-                observer.observe(section);
-            });
+                // --- Back to Top Button ---
+                window.addEventListener("scroll", () => {
+                    if (window.scrollY > 300) {
+                        backToTopButton.classList.add("visible");
+                    } else {
+                        backToTopButton.classList.remove("visible");
+                    }
+                });
 
-            // Tab functionality
-            document.querySelectorAll(".tab-button").forEach((button) => {
-                button.addEventListener("click", () => {
-                    const tabId = button.dataset.tab;
+                // --- Active Nav Link on Scroll ---
+                const observerCallback = (entries) => {
+                    entries.forEach((entry) => {
+                        if (entry.isIntersecting) {
+                            const id = entry.target.getAttribute("id");
+                            navLinks.forEach((link) => {
+                                link.classList.remove("active");
+                                // Match both affiliate-cta and compensation-cta for the link
+                                if (
+                                    link.getAttribute("href") === `#${id}` ||
+                                    (id === "affiliate-cta" &&
+                                        link.getAttribute("href") ===
+                                            "#affiliate-cta")
+                                ) {
+                                    link.classList.add("active");
+                                }
+                            });
+                        }
+                    });
+                };
 
-                    // Deactivate all buttons and content
-                    document
-                        .querySelectorAll(".tab-button")
-                        .forEach((btn) => btn.classList.remove("active"));
-                    document
-                        .querySelectorAll(".tab-content")
-                        .forEach((content) =>
-                            content.classList.remove("active")
+                const sectionObserver = new IntersectionObserver(
+                    observerCallback,
+                    {
+                        rootMargin: "-30% 0px -70% 0px",
+                    }
+                );
+
+                sections.forEach((section) => {
+                    sectionObserver.observe(section);
+                });
+
+                // --- Mobile Navigation Toggle ---
+                const toggleMobileMenu = () => {
+                    const isOpen = mobileMenu.classList.toggle("active");
+                    mobileMenuOverlay.classList.toggle("hidden", !isOpen);
+                    document.body.classList.toggle("mobile-nav-open", isOpen);
+                };
+
+                hamburgerBtn.addEventListener("click", toggleMobileMenu);
+                mobileMenuOverlay.addEventListener("click", toggleMobileMenu);
+                mobileNavLinks.forEach((link) => {
+                    link.addEventListener("click", toggleMobileMenu);
+                });
+
+                // --- Intersection Observer for fade-in animations ---
+                const fadeObserver = new IntersectionObserver(
+                    (entries, observer) => {
+                        entries.forEach((entry) => {
+                            if (entry.isIntersecting) {
+                                entry.target.classList.add("is-visible");
+                                observer.unobserve(entry.target);
+                            }
+                        });
+                    },
+                    { threshold: 0.1 }
+                );
+
+                document
+                    .querySelectorAll(".animate-fade-in")
+                    .forEach((section) => {
+                        fadeObserver.observe(section);
+                    });
+
+                // --- Tab functionality ---
+                const tabButtons = document.querySelectorAll(".tab-button");
+                tabButtons.forEach((button) => {
+                    button.addEventListener("click", () => {
+                        const tabId = button.dataset.tab;
+                        tabButtons.forEach((btn) =>
+                            btn.classList.remove("active")
                         );
-
-                    // Activate clicked button and corresponding content
-                    button.classList.add("active");
-                    document.getElementById(tabId).classList.add("active");
+                        document
+                            .querySelectorAll(".tab-content")
+                            .forEach((content) =>
+                                content.classList.remove("active")
+                            );
+                        button.classList.add("active");
+                        document.getElementById(tabId).classList.add("active");
+                    });
                 });
-            });
 
-            // Accordion functionality
-            document.querySelectorAll(".accordion-header").forEach((header) => {
-                header.addEventListener("click", () => {
-                    const content = header.nextElementSibling; // Get the content div
-                    header.classList.toggle("active");
-                    content.classList.toggle("active");
+                // --- Accordion functionality ---
+                const accordionHeaders =
+                    document.querySelectorAll(".accordion-header");
+                accordionHeaders.forEach((header) => {
+                    header.addEventListener("click", () => {
+                        const content = header.nextElementSibling;
+                        header.classList.toggle("active");
+                        content.classList.toggle("active");
+                    });
                 });
+
+                // --- REMOVED Modal functionality ---
             });
         </script>
     </body>
